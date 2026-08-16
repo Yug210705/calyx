@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Filter, ChevronDown, FileText, CheckSquare, MessageSquare, UserPlus, Folder, Calendar as CalendarIcon, Shield, Info, FileEdit, CheckCircle, Trash2, ChevronRight, FileJson } from 'lucide-react';
-import { activityService } from '../services/api';
+import { activityService, projectService } from '../services/api';
 import './Activity.css';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -53,8 +53,7 @@ export const Activity = () => {
   const loadData = async () => {
     try {
       // Need to fetch projects too, for the dropdown
-      const res = await fetch('http://localhost:8000/api/v1/projects/');
-      const pData = await res.json();
+      const pData = await projectService.getProjects();
       setProjects(pData);
       
       const data = await activityService.getActivities();
