@@ -159,14 +159,14 @@ export const Projects = () => {
                 <div className="col-team cell-team">
                   <div className="team-avatars">
                     {project.team && project.team.length > 0 ? (
-                      project.team.slice(0, 3).map((member, i) => (
-                        <img key={i} src={member.avatar || 'https://i.pravatar.cc/150?u=' + member.id} alt="team" />
+                      project.team.slice(0, 3).map((member: any, i: number) => (
+                        <img key={i} src={member.avatar || 'https://i.pravatar.cc/150?u=' + member.id} alt="team" className="team-avatar" />
                       ))
                     ) : (
                       <span className="no-team-text">Unassigned</span>
                     )}
                     {project.team && project.team.length > 3 && (
-                      <div className="extra-team">+{project.team.length - 3}</div>
+                      <div className="team-avatar-extra">+{project.team.length - 3}</div>
                     )}
                   </div>
                 </div>
