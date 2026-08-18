@@ -354,7 +354,6 @@
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  margin: auto 0;
 }
 
 .auth-tabs {
