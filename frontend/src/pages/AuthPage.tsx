@@ -206,21 +206,6 @@ export const AuthPage = () => {
 
         <div className="auth-right-content">
           <div className="auth-form-container">
-            <div className="auth-tabs">
-              <button 
-                className={`auth-tab ${isLogin ? 'active' : ''}`}
-                onClick={() => handleTabSwitch(true)}
-              >
-                Sign In
-              </button>
-              <button 
-                className={`auth-tab ${!isLogin ? 'active' : ''}`}
-                onClick={() => handleTabSwitch(false)}
-              >
-                Create Account
-              </button>
-            </div>
-
             <div className="auth-form-header">
               <h2>{isLogin ? 'Welcome back' : 'Create an account'}</h2>
               <p>{isLogin ? 'Sign in to continue to Atlas' : 'Start your 14-day free trial today'}</p>
