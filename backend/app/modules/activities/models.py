@@ -7,6 +7,7 @@ class Activity(Base):
     __tablename__ = "activities"
 
     id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(String, index=True, nullable=False, default="demo")
     user_id = Column(Integer, ForeignKey("users.id"))
     action_type = Column(String) # e.g. "completed_task", "uploaded_file"
     description = Column(String)

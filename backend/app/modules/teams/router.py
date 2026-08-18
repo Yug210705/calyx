@@ -7,12 +7,13 @@ from typing import List
 from app.db.session import get_db
 from app.modules.teams.models import Team
 from app.modules.teams.schemas import TeamCreate, TeamUpdate, TeamResponse
+from app.core.security import get_current_user
 
 router = APIRouter(prefix="/teams", tags=["Teams"])
 
 @router.post("/", response_model=TeamResponse)
-async def create_team(team: TeamCreate, db: AsyncSession = Depends(get_db)):
-    db_team = Team(**team.model_dump())
+async def create_team(team: TeamCreate, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    db_team = Team(**team.model_dump(), owner_id=current_user["sub"])
     db.add(db_team)
     await db.commit()
     await db.refresh(db_team)
@@ -23,8 +24,8 @@ async def create_team(team: TeamCreate, db: AsyncSession = Depends(get_db)):
     return db_team
 
 @router.get("/", response_model=List[TeamResponse])
-async def read_teams(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).offset(skip).limit(limit))
+async def read_teams(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.owner_id == current_user["sub"]).offset(skip).limit(limit))
     teams = result.scalars().all()
     
     # Compute counts dynamically
@@ -35,8 +36,8 @@ async def read_teams(skip: int = 0, limit: int = 100, db: AsyncSession = Depends
     return teams
 
 @router.get("/{team_id}", response_model=TeamResponse)
-async def read_team(team_id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id))
+async def read_team(team_id: int, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id, Team.owner_id == current_user["sub"]))
     team = result.scalars().first()
     if team is None:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -46,8 +47,8 @@ async def read_team(team_id: int, db: AsyncSession = Depends(get_db)):
     return team
 
 @router.put("/{team_id}", response_model=TeamResponse)
-async def update_team(team_id: int, team_update: TeamUpdate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id))
+async def update_team(team_id: int, team_update: TeamUpdate, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id, Team.owner_id == current_user["sub"]))
     team = result.scalars().first()
     if team is None:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -64,8 +65,8 @@ async def update_team(team_id: int, team_update: TeamUpdate, db: AsyncSession = 
     return team
 
 @router.delete("/{team_id}")
-async def delete_team(team_id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Team).filter(Team.id == team_id))
+async def delete_team(team_id: int, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    result = await db.execute(select(Team).filter(Team.id == team_id, Team.owner_id == current_user["sub"]))
     team = result.scalars().first()
     if team is None:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -78,10 +79,10 @@ class MemberAdd(BaseModel):
     user_id: int
 
 @router.post("/{team_id}/members", response_model=TeamResponse)
-async def add_team_member(team_id: int, payload: MemberAdd, db: AsyncSession = Depends(get_db)):
+async def add_team_member(team_id: int, payload: MemberAdd, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
     from app.modules.users.models import User
     
-    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id))
+    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id, Team.owner_id == current_user["sub"]))
     team = result.scalars().first()
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")
@@ -101,8 +102,8 @@ async def add_team_member(team_id: int, payload: MemberAdd, db: AsyncSession = D
     return team
 
 @router.delete("/{team_id}/members/{user_id}", response_model=TeamResponse)
-async def remove_team_member(team_id: int, user_id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id))
+async def remove_team_member(team_id: int, user_id: int, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    result = await db.execute(select(Team).options(selectinload(Team.lead), selectinload(Team.members)).filter(Team.id == team_id, Team.owner_id == current_user["sub"]))
     team = result.scalars().first()
     if not team:
         raise HTTPException(status_code=404, detail="Team not found")

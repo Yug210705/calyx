@@ -14,6 +14,7 @@ class Team(Base):
     __tablename__ = "teams"
 
     id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(String, index=True, nullable=False, default="demo")
     name = Column(String, index=True)
     acronym = Column(String, index=True)
     description = Column(String)

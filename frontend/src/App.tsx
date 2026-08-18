@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Sidebar } from './components/layout/Sidebar';
 import { Dashboard } from './pages/Dashboard';
 import { Projects } from './pages/Projects';
@@ -10,33 +10,60 @@ import { Activity } from './pages/Activity';
 import { Reports } from './pages/Reports';
 import { Integrations } from './pages/Integrations';
 import { Settings } from './pages/Settings';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { VerifyEmail } from './pages/VerifyEmail';
 import { TopBar } from './components/layout/TopBar';
+import { AuthProvider, useAuth } from './services/AuthContext';
 import './index.css';
+
+const ProtectedLayout = () => {
+  const { session, isDemoMode, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading Atlas...</div>;
+  }
+
+  if (!session && !isDemoMode) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <div className="app-container">
+      <Sidebar />
+      <main className="main-content">
+        <TopBar />
+        <div className="page-scroller" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+};
 
 function App() {
   return (
-    <Router>
-      <div className="app-container">
-        <Sidebar />
-        <main className="main-content">
-          <TopBar />
-          <div className="page-scroller" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              {/* Placeholder routes for other pages */}
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/activity" element={<Activity />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/integrations" element={<Integrations />} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          
+          <Route element={<ProtectedLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/activity" element={<Activity />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

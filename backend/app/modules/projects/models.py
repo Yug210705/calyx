@@ -14,6 +14,7 @@ class Project(Base):
     __tablename__ = "projects"
 
     id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(String, index=True, nullable=False, default="demo")
     title = Column(String, index=True)
     description = Column(String)
     status = Column(String, default="Planning") # Planning, In Progress, On Hold, Completed

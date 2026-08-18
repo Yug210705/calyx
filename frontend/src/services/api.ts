@@ -1,4 +1,19 @@
+import { supabase } from './supabase';
+
 const API_BASE_URL = 'http://localhost:8000/api/v1';
+
+const getHeaders = async () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    headers['Authorization'] = `Bearer ${session.access_token}`;
+  }
+  return headers;
+};
+
+const isDemoMode = () => localStorage.getItem('demo_mode') === 'true';
 
 const getMockDataForEndpoint = (endpoint: string) => {
   if (endpoint.includes('/projects')) {
@@ -66,8 +81,10 @@ const getMockDataForEndpoint = (endpoint: string) => {
 
 export const api = {
   async get(endpoint: string) {
+    if (isDemoMode()) return getMockDataForEndpoint(endpoint);
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`);
+      const headers = await getHeaders();
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, { headers });
       if (!response.ok) throw new Error(`API GET Error: ${response.statusText}`);
       return await response.json();
     } catch (error) {
@@ -76,26 +93,33 @@ export const api = {
     }
   },
   async post(endpoint: string, data: any) {
+    if (isDemoMode()) return { success: true };
+    const headers = await getHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error(`API POST Error: ${response.statusText}`);
     return response.json();
   },
   async put(endpoint: string, data: any) {
+    if (isDemoMode()) return { success: true };
+    const headers = await getHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error(`API PUT Error: ${response.statusText}`);
     return response.json();
   },
   async delete(endpoint: string) {
+    if (isDemoMode()) return { success: true };
+    const headers = await getHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'DELETE',
+      headers,
     });
     if (!response.ok) throw new Error(`API DELETE Error: ${response.statusText}`);
     return response.json();
