@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, ChevronDown, User, Settings, LogOut, MessageSquare, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../services/AuthContext';
 import './TopBar.css';
 
 export const TopBar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const { user, isDemoMode, signOut } = useAuth();
+  const navigate = useNavigate();
   
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -84,10 +87,10 @@ export const TopBar = () => {
             className={`top-bar-profile ${showProfile ? 'active' : ''}`}
             onClick={() => setShowProfile(!showProfile)}
           >
-            <img src="https://i.pravatar.cc/150?u=yug" alt="User Profile" className="profile-avatar" />
+            <img src={isDemoMode ? "https://i.pravatar.cc/150?u=demo" : "https://i.pravatar.cc/150?u=yug"} alt="User Profile" className="profile-avatar" />
             <div className="profile-info">
-              <div className="profile-name">Yug Pratap</div>
-              <div className="profile-role">Admin</div>
+              <div className="profile-name">{isDemoMode ? "Guest User" : (user?.email?.split('@')[0] || "User")}</div>
+              <div className="profile-role">{isDemoMode ? "Demo Mode" : "Admin"}</div>
             </div>
             <ChevronDown size={14} className="profile-chevron" />
           </div>
@@ -95,8 +98,8 @@ export const TopBar = () => {
           {showProfile && (
             <div className="dropdown-menu profile-menu">
               <div className="profile-menu-header">
-                <p className="profile-menu-name">Yug Pratap</p>
-                <p className="profile-menu-email">yug@example.com</p>
+                <p className="profile-menu-name">{isDemoMode ? "Guest User" : (user?.email?.split('@')[0] || "User")}</p>
+                <p className="profile-menu-email">{isDemoMode ? "demo@atlas.app" : user?.email}</p>
               </div>
               <div className="dropdown-divider"></div>
               <Link to="/settings" className="dropdown-item">
@@ -106,7 +109,10 @@ export const TopBar = () => {
                 <Settings size={16} /> Account Settings
               </Link>
               <div className="dropdown-divider"></div>
-              <button className="dropdown-item danger">
+              <button className="dropdown-item danger" onClick={async () => {
+                await signOut();
+                navigate('/login');
+              }}>
                 <LogOut size={16} /> Log Out
               </button>
             </div>
