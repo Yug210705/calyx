@@ -10,8 +10,7 @@ import { Activity } from './pages/Activity';
 import { Reports } from './pages/Reports';
 import { Integrations } from './pages/Integrations';
 import { Settings } from './pages/Settings';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
+import { AuthPage } from './pages/AuthPage';
 import { VerifyEmail } from './pages/VerifyEmail';
 import { TopBar } from './components/layout/TopBar';
 import { AuthProvider, useAuth } from './services/AuthContext';
@@ -46,8 +45,8 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           
           <Route element={<ProtectedLayout />}>
