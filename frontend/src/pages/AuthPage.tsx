@@ -165,37 +165,6 @@ export const AuthPage = () => {
           </div>
         </div>
 
-        <div className="auth-features-grid">
-          <div className="auth-feature">
-            <div className="auth-feature-icon">
-              <Shield size={18} />
-            </div>
-            <div className="auth-feature-title">Enterprise Ready</div>
-            <div className="auth-feature-desc">Built with security, scalability and reliability in mind.</div>
-          </div>
-          <div className="auth-feature">
-            <div className="auth-feature-icon">
-              <Users size={18} />
-            </div>
-            <div className="auth-feature-title">Team Collaboration</div>
-            <div className="auth-feature-desc">Bring your teams together and get work done.</div>
-          </div>
-          <div className="auth-feature">
-            <div className="auth-feature-icon">
-              <BarChart size={18} />
-            </div>
-            <div className="auth-feature-title">Real-time Insights</div>
-            <div className="auth-feature-desc">Track progress with powerful reports and dashboards.</div>
-          </div>
-          <div className="auth-feature">
-            <div className="auth-feature-icon">
-              <Puzzle size={18} />
-            </div>
-            <div className="auth-feature-title">Seamless Integrations</div>
-            <div className="auth-feature-desc">Connect your favorite tools and automate workflows.</div>
-          </div>
-        </div>
-
         <div className="auth-testimonial">
           <span className="auth-quote-icon" style={{fontSize: '2rem', lineHeight: '0.8'}}>&#8220;</span>
           <div className="auth-quote-text">
@@ -267,6 +236,10 @@ export const AuthPage = () => {
               <button className="auth-social-btn" type="button" onClick={() => navigate('/')}>
                 <img src="https://www.microsoft.com/favicon.ico" alt="Microsoft" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 Continue with Microsoft
+              </button>
+              <button className="auth-social-btn guest-btn" type="button" onClick={() => { setDemoMode(true); navigate('/'); }}>
+                <Eye size={18} />
+                Continue as Guest
               </button>
             </div>
 
@@ -343,11 +316,6 @@ export const AuthPage = () => {
                 <>Already have an account? <span className="auth-link" onClick={() => handleTabSwitch(true)}>Sign in</span></>
               )}
             </div>
-            
-            <div style={{textAlign: 'center', marginTop: '1rem'}}>
-               <span className="auth-link" style={{fontSize: '0.85rem'}} onClick={() => { setDemoMode(true); navigate('/'); }}>Explore Demo Mode</span>
-            </div>
-
           </div>
 
           <div className="auth-info-panel">
