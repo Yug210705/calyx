@@ -103,10 +103,11 @@
 }
 
 .welcome-section {
-  background: linear-gradient(to bottom, #DFD8FF 0%, #F5F6FF 100%);
+  background: var(--card-bg);
   border-radius: var(--border-radius-lg);
   padding: 32px 32px 24px;
-  border: 1px solid #DCE3FF;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .welcome-header {
