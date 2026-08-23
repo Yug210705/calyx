@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { Sidebar } from './components/layout/Sidebar';
+import { Sidebar, SidebarProvider } from './components/layout/Sidebar';
 import { Dashboard } from './pages/Dashboard';
 import { Projects } from './pages/Projects';
 import { Tasks } from './pages/Tasks';
@@ -28,15 +28,17 @@ const ProtectedLayout = () => {
   }
 
   return (
-    <div className="app-container">
-      <Sidebar />
-      <main className="main-content">
-        <TopBar />
-        <div className="page-scroller" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-          <Outlet />
-        </div>
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="app-container">
+        <Sidebar />
+        <main className="main-content">
+          <TopBar />
+          <div className="page-scroller" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };
 

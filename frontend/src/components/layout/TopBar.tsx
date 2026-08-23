@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, ChevronDown, User, Settings, LogOut, MessageSquare, AlertCircle } from 'lucide-react';
+import { Search, Bell, ChevronDown, User, Settings, LogOut, MessageSquare, AlertCircle, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
+import { useSidebar } from './Sidebar';
 import './TopBar.css';
 
 export const TopBar = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const { user, isDemoMode, signOut } = useAuth();
+  const { collapsed, setCollapsed } = useSidebar();
   const navigate = useNavigate();
   
   const notifRef = useRef<HTMLDivElement>(null);
@@ -28,6 +30,13 @@ export const TopBar = () => {
 
   return (
     <header className="top-bar">
+      <button 
+        className="hamburger-btn"
+        onClick={() => setCollapsed(!collapsed)}
+        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        <Menu size={20} />
+      </button>
       <div className="top-bar-search">
         <Search size={16} className="search-icon" />
         <input type="text" placeholder="Search projects..." />
