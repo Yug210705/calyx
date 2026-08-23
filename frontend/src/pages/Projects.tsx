@@ -15,6 +15,7 @@ import {
   ArrowDownRight
 } from 'lucide-react';
 import { projectService } from '../services/api';
+import { ProjectGraphModal } from '../components/ProjectGraphModal';
 import './Projects.css';
 
 const overviewStats = [
@@ -55,6 +56,7 @@ const overviewStats = [
 export const Projects = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedProjectForGraph, setSelectedProjectForGraph] = useState<string | null>(null);
 
   useEffect(() => {
     loadProjects();
@@ -129,7 +131,7 @@ export const Projects = () => {
               <div className="empty-state">No projects found.</div>
             ) : (
               projects.map(project => (
-              <div key={project.id} className="project-row">
+              <div key={project.id} className="project-row" onClick={() => setSelectedProjectForGraph(project.title)} style={{ cursor: 'pointer' }}>
                 <div className="col-project cell-project">
                   <div 
                     className="project-initial"
@@ -196,6 +198,13 @@ export const Projects = () => {
         </div>
       </div>
       </div>
+      
+      {selectedProjectForGraph && (
+        <ProjectGraphModal 
+          projectName={selectedProjectForGraph} 
+          onClose={() => setSelectedProjectForGraph(null)} 
+        />
+      )}
     </div>
   );
 };
