@@ -95,7 +95,7 @@ export const AuthPage = () => {
         setError(error.message);
       } else {
         setOtpSent(true);
-        setMessage('A 6-digit verification code has been sent to your email.');
+        setMessage('A verification code has been sent to your email.');
       }
       setLoading(false);
     } else {
@@ -283,11 +283,10 @@ export const AuthPage = () => {
                     <input 
                       type="text"
                       className="auth-input" 
-                      placeholder="Enter 6-digit code"
+                      placeholder="Enter verification code"
                       value={otpCode}
                       onChange={(e) => setOtpCode(e.target.value)}
                       required
-                      maxLength={6}
                     />
                   </div>
                 </div>
