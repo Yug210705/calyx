@@ -14,7 +14,29 @@ import {
   PanelLeft,
   Star,
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  CalendarDays,
+  UsersRound,
+  FolderOpen,
+  ListTodo,
+  KanbanSquare,
+  GanttChart,
+  LayoutGrid,
+  Clock,
+  TrendingUp,
+  PieChart,
+  FileBarChart,
+  Layers,
+  Timer,
+  Puzzle,
+  Zap,
+  Database,
+  Globe,
+  UserCog,
+  Shield,
+  Bell,
+  Palette,
+  Key
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -40,11 +62,155 @@ const navItems = [
   { name: 'Settings', icon: Settings, path: '/settings' },
 ];
 
-const starredProjects = [
-  { name: 'Atlas Mobile App', color: '#6366F1' },
-  { name: 'Website Redesign', color: '#06B6D4' },
-  { name: 'Internal Dashboard', color: '#F59E0B' },
-];
+// Contextual sidebar content per page
+const contextualSections: Record<string, { sections: { title: string; items: { name: string; icon: React.ElementType; color?: string; subtitle?: string; active?: boolean }[]; viewAllLink?: string }[] }> = {
+  '/': {
+    sections: [
+      {
+        title: 'STARRED PROJECTS',
+        items: [
+          { name: 'Atlas Mobile App', icon: Star, color: '#6366F1' },
+          { name: 'Website Redesign', icon: Star, color: '#06B6D4' },
+          { name: 'Internal Dashboard', icon: Star, color: '#F59E0B' },
+        ]
+      }
+    ]
+  },
+  '/projects': {
+    sections: [
+      {
+        title: 'PROJECT VIEWS',
+        items: [
+          { name: 'All Projects', icon: LayoutGrid, active: true },
+          { name: 'Board View', icon: KanbanSquare },
+          { name: 'Timeline', icon: GanttChart },
+        ]
+      },
+      {
+        title: 'RECENT PROJECTS',
+        items: [
+          { name: 'Atlas Mobile App', icon: Star, color: '#6366F1' },
+          { name: 'Website Redesign', icon: Star, color: '#06B6D4' },
+          { name: 'AI Dashboard', icon: Star, color: '#10B981' },
+        ],
+        viewAllLink: '/projects'
+      }
+    ]
+  },
+  '/tasks': {
+    sections: [
+      {
+        title: 'TASK VIEWS',
+        items: [
+          { name: 'My Tasks', icon: ListTodo, active: true },
+          { name: 'Board View', icon: KanbanSquare },
+          { name: 'Timeline', icon: GanttChart },
+        ]
+      },
+      {
+        title: 'DUE SOON',
+        items: [
+          { name: 'API Integration', icon: Clock, color: '#EF4444', subtitle: 'Due today' },
+          { name: 'Landing Page Design', icon: Clock, color: '#F59E0B', subtitle: 'Due tomorrow' },
+          { name: 'Schema Design', icon: Clock, color: '#10B981', subtitle: 'May 25' },
+        ],
+        viewAllLink: '/tasks'
+      }
+    ]
+  },
+  '/calendar': {
+    sections: [
+      {
+        title: 'CALENDAR VIEWS',
+        items: [
+          { name: 'My Calendar', icon: CalendarDays, color: '#6366F1', active: true },
+          { name: 'Team Calendar', icon: UsersRound, color: '#64748B' },
+          { name: 'Project Calendar', icon: FolderOpen, color: '#10B981' },
+        ]
+      },
+      {
+        title: 'UPCOMING',
+        items: [
+          { name: 'Sprint Planning', icon: Clock, color: '#6366F1', subtitle: 'May 20, 10:00 AM' },
+          { name: 'Design Review', icon: Clock, color: '#10B981', subtitle: 'May 22, 02:00 PM' },
+          { name: 'Release v1.0', icon: Clock, color: '#F59E0B', subtitle: 'May 30, 09:00 AM' },
+        ],
+        viewAllLink: '/calendar'
+      }
+    ]
+  },
+  '/teams': {
+    sections: [
+      {
+        title: 'TEAM VIEWS',
+        items: [
+          { name: 'All Teams', icon: Users, active: true },
+          { name: 'Workload', icon: BarChart2 },
+          { name: 'Roles & Access', icon: Shield },
+        ]
+      },
+      {
+        title: 'YOUR TEAMS',
+        items: [
+          { name: 'Engineering', icon: Star, color: '#3B82F6' },
+          { name: 'Product', icon: Star, color: '#10B981' },
+          { name: 'Design', icon: Star, color: '#F59E0B' },
+        ]
+      }
+    ]
+  },
+  '/activity': {
+    sections: [
+      {
+        title: 'ACTIVITY FILTERS',
+        items: [
+          { name: 'All Activity', icon: Activity, active: true },
+          { name: 'Mentions', icon: Bell },
+          { name: 'Updates', icon: TrendingUp },
+        ]
+      }
+    ]
+  },
+  '/reports': {
+    sections: [
+      {
+        title: 'REPORT TYPES',
+        items: [
+          { name: 'Overview', icon: PieChart, active: true },
+          { name: 'Projects', icon: FolderKanban },
+          { name: 'Tasks', icon: FileBarChart },
+          { name: 'Teams', icon: Users },
+        ]
+      }
+    ]
+  },
+  '/integrations': {
+    sections: [
+      {
+        title: 'CATEGORIES',
+        items: [
+          { name: 'All Integrations', icon: Layers, active: true },
+          { name: 'Automation', icon: Zap },
+          { name: 'Database', icon: Database },
+          { name: 'Communication', icon: Globe },
+        ]
+      }
+    ]
+  },
+  '/settings': {
+    sections: [
+      {
+        title: 'SETTINGS',
+        items: [
+          { name: 'Profile', icon: UserCog, active: true },
+          { name: 'Notifications', icon: Bell },
+          { name: 'Appearance', icon: Palette },
+          { name: 'Security', icon: Key },
+        ]
+      }
+    ]
+  },
+};
 
 export const SidebarProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -58,6 +224,7 @@ export const SidebarProvider: React.FC<{children: React.ReactNode}> = ({ childre
 export const Sidebar = () => {
   const location = useLocation();
   const { collapsed, setCollapsed } = useSidebar();
+  const contextual = contextualSections[location.pathname];
 
   return (
     <aside className={clsx('sidebar', collapsed && 'sidebar--collapsed')}>
@@ -100,26 +267,30 @@ export const Sidebar = () => {
           })}
         </nav>
 
-        {/* Starred Projects */}
-        {!collapsed && (
-          <div className="sidebar-section">
-            <h3 className="section-title">
-              <Star size={12} />
-              Starred Projects
-            </h3>
-            <ul className="starred-list">
-              {starredProjects.map((project) => (
-                <li key={project.name} className="starred-item">
-                  <span 
-                    className="project-dot" 
-                    style={{ backgroundColor: project.color }} 
-                  />
-                  <span className="starred-name">{project.name}</span>
+        {/* Contextual Sections */}
+        {!collapsed && contextual && contextual.sections.map((section, sIdx) => (
+          <div className="sidebar-section" key={sIdx}>
+            <h3 className="section-title">{section.title}</h3>
+            <ul className="context-list">
+              {section.items.map((item) => (
+                <li key={item.name} className={clsx('context-item', item.active && 'context-item--active')}>
+                  {item.color ? (
+                    <span className="project-dot" style={{ backgroundColor: item.color }} />
+                  ) : (
+                    <item.icon size={15} className="context-icon" />
+                  )}
+                  <div className="context-text">
+                    <span className="context-name">{item.name}</span>
+                    {item.subtitle && <span className="context-subtitle">{item.subtitle}</span>}
+                  </div>
                 </li>
               ))}
             </ul>
+            {section.viewAllLink && (
+              <Link to={section.viewAllLink} className="context-view-all">View all</Link>
+            )}
           </div>
-        )}
+        ))}
       </div>
 
       {/* Footer */}

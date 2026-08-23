@@ -168,9 +168,11 @@
   background: var(--primary-color);
 }
 
-/* ── Starred Projects ───────────────────────────── */
+/* ── Contextual Sections ────────────────────────── */
 .sidebar-section {
   padding: 0 4px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
 }
 
 .section-title {
@@ -182,33 +184,86 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   padding: 0 8px;
 }
 
-.starred-list {
+.context-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
-.starred-item {
+.context-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 12px;
+  padding: 7px 12px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.15s;
 }
 
-.starred-item:hover {
+.context-item:hover {
   background: var(--bg-color);
   color: var(--text-primary);
+}
+
+.context-item--active {
+  background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.context-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.context-item:hover .context-icon {
+  color: var(--text-primary);
+}
+
+.context-item--active .context-icon {
+  color: var(--primary-color);
+}
+
+.context-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.context-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-subtitle {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.context-view-all {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--primary-color);
+  padding: 8px 12px 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.context-view-all:hover {
+  text-decoration: underline;
 }
 
 .project-dot {
