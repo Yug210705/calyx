@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  background-color: white;
+  background: var(--card-bg);
 }
 
 .projects-container {
@@ -54,7 +54,7 @@
 .search-box {
   display: flex;
   align-items: center;
-  background-color: #F8FAFC;
+  background: var(--bg-color);
   border: 1px solid var(--border-color);
   padding: 10px 14px;
   border-radius: 10px;
@@ -87,10 +87,10 @@
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
-  background-color: white;
-  color: #475569;
+  background: var(--card-bg);
+  color: var(--text-secondary);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -131,7 +131,7 @@
 }
 
 .overview-card {
-  background-color: white;
+  background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 24px;
@@ -204,7 +204,7 @@
 
 /* Projects Table */
 .projects-list-container {
-  background-color: white;
+  background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -306,7 +306,7 @@
 .progress-bar-bg {
   flex: 1;
   height: 8px;
-  background-color: #F1F5F9;
+  background: var(--bg-color);
   border-radius: 4px;
   overflow: hidden;
   max-width: 140px;
@@ -353,13 +353,13 @@
   height: 32px;
   border-radius: 50%;
   border: 2px solid white;
-  background-color: #F1F5F9;
+  background: var(--bg-color);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   margin-left: -10px;
   z-index: 1;
 }
@@ -416,12 +416,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #E2E8F0;
-  background-color: white;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -431,7 +431,7 @@
 }
 
 .page-btn.active {
-  background-color: white;
+  background: var(--card-bg);
   border-color: #8B5CF6;
   color: #8B5CF6;
   font-weight: 600;

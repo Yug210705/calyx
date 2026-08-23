@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background-color: #FFFFFF;
+  background: var(--card-bg);
 }
 
 .dashboard-header {
@@ -25,7 +25,7 @@
 .header-search {
   display: flex;
   align-items: center;
-  background-color: #FFFFFF;
+  background: var(--card-bg);
   padding: 10px 16px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
@@ -269,7 +269,7 @@
   transform: translate(-50%, -50%);
   width: 90px;
   height: 90px;
-  background-color: white;
+  background: var(--card-bg);
   border-radius: 50%;
 }
 

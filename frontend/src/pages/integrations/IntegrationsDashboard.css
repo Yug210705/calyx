@@ -33,8 +33,8 @@
 }
 
 .intg-stat-card {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -65,14 +65,14 @@
 
 .intg-stat-label {
   font-size: 12px;
-  color: #6B7280;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .intg-stat-val {
   font-size: 20px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .intg-stat-trend {
@@ -92,7 +92,7 @@
 .intg-section-title {
   font-size: 16px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -115,8 +115,8 @@
 }
 
 .intg-pop-card {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
@@ -145,19 +145,19 @@
 .intg-pop-name {
   font-size: 15px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0 0 2px 0;
 }
 
 .intg-pop-cat {
   font-size: 12px;
-  color: #6B7280;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .intg-pop-desc {
   font-size: 13px;
-  color: #4B5563;
+  color: var(--text-secondary);
   line-height: 1.5;
   margin: 0 0 16px 0;
   flex: 1;
@@ -167,7 +167,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #F3F4F6;
+  border: 1px solid var(--border-color);
   padding-top: 16px;
 }
 
@@ -199,7 +199,7 @@
 .intg-btn-connect {
   padding: 6px 12px;
   border: 1px solid #DCE3FF;
-  background: #FFFFFF;
+  background: var(--card-bg);
   color: #4F46E5;
   border-radius: 6px;
   font-size: 12px;
@@ -212,16 +212,16 @@
 .intg-btn-icon {
   width: 28px;
   height: 28px;
-  border: 1px solid #E5E7EB;
-  background: #FFFFFF;
-  color: #4B5563;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-secondary);
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
-.intg-btn-icon:hover { background: #F3F4F6; }
+.intg-btn-icon:hover { background: var(--bg-color); }
 
 /* --- ALL INTEGRATIONS TABLE --- */
 .intg-table-filters {
@@ -232,9 +232,9 @@
 }
 .intg-filter-select {
   padding: 8px 12px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: #FFFFFF;
+  background: var(--card-bg);
   font-size: 13px;
   color: #374151;
   cursor: pointer;
@@ -242,8 +242,8 @@
 }
 
 .intg-table-wrapper {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
@@ -259,16 +259,16 @@
   padding: 12px 24px;
   font-size: 12px;
   font-weight: 600;
-  color: #111827;
-  border-bottom: 1px solid #E5E7EB;
-  background: #F9FAFB;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
 }
 
 .intg-table td {
   padding: 16px 24px;
   font-size: 13px;
-  color: #111827;
-  border-bottom: 1px solid #E5E7EB;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   vertical-align: middle;
 }
 
@@ -297,13 +297,13 @@
 .intg-cat-tag.automation { background: #FFF7ED; color: #C2410C; }
 
 .intg-td-desc {
-  color: #4B5563;
+  color: var(--text-secondary);
   line-height: 1.4;
   max-width: 250px;
 }
 
 .intg-td-activity {
-  color: #6B7280;
+  color: var(--text-secondary);
 }
 
 .intg-td-actions {
@@ -317,13 +317,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #E5E7EB;
-  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
 }
 
 .intg-table-info {
   font-size: 13px;
-  color: #6B7280;
+  color: var(--text-secondary);
 }
 
 .intg-pagination {
@@ -337,8 +337,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #E5E7EB;
-  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
   color: #374151;
   border-radius: 6px;
   font-size: 13px;
@@ -358,8 +358,8 @@
 
 /* --- SIDEBAR CARDS --- */
 .intg-side-card {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
@@ -375,7 +375,7 @@
 .intg-side-title {
   font-size: 15px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -410,11 +410,11 @@
 .intg-acc-name {
   font-size: 13px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 .intg-acc-email {
   font-size: 12px;
-  color: #6B7280;
+  color: var(--text-secondary);
 }
 .intg-side-footer-link {
   display: block;
@@ -446,7 +446,7 @@
 .intg-auto-rule {
   font-size: 13px;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -456,7 +456,7 @@
 }
 .intg-auto-meta {
   font-size: 12px;
-  color: #6B7280;
+  color: var(--text-secondary);
 }
 /* Toggle Switch */
 .intg-toggle {
@@ -474,7 +474,7 @@
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #E5E7EB;
+  background: var(--border-color);
   transition: .4s;
   border-radius: 34px;
 }
@@ -485,7 +485,7 @@
   width: 16px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
+  background: var(--card-bg);
   transition: .4s;
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -525,9 +525,9 @@
 .intg-act-text {
   font-size: 13px;
   font-weight: 500;
-  color: #111827;
+  color: var(--text-primary);
 }
 .intg-act-meta {
   font-size: 12px;
-  color: #6B7280;
+  color: var(--text-secondary);
 }

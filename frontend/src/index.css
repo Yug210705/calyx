@@ -157,10 +157,11 @@ input, select, textarea, optgroup {
 
 /* Global Page Header (Gradient Bar) */
 .global-page-header {
-  background: linear-gradient(to bottom, #DFD8FF 0%, #F5F6FF 100%);
+  background: var(--card-bg);
   border-radius: var(--border-radius-md);
   padding: 28px 32px 24px;
-  border: 1px solid #DCE3FF;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
   margin-bottom: 24px;
   flex-shrink: 0;
   display: flex;

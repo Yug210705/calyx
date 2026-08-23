@@ -1,10 +1,10 @@
 /* Reports.css */
 .rpt-container {
   padding: 24px 32px;
-  background-color: #FFFFFF;
+  background: var(--card-bg);
   flex: 1;
   overflow-y: auto;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .rpt-header {
@@ -15,7 +15,7 @@
   font-size: 24px;
   font-weight: 700;
   margin: 0 0 8px 0;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .rpt-subtitle {
@@ -27,7 +27,7 @@
 .rpt-tabs {
   display: flex;
   gap: 24px;
-  border-bottom: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   margin-bottom: 24px;
 }
 
@@ -88,8 +88,8 @@
 }
 
 .rpt-kpi-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 16px;
   display: flex;
@@ -137,7 +137,7 @@
 .rpt-kpi-value {
   font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   line-height: 1.1;
   letter-spacing: -0.5px;
 }
@@ -157,7 +157,7 @@
 
 .rpt-trend-vs {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 400;
 }
 
@@ -187,8 +187,8 @@
 }
 
 .rpt-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -220,7 +220,7 @@
   color: #64748b;
   cursor: pointer;
   padding: 4px 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
 }
 
@@ -246,7 +246,7 @@
 
 .rpt-dot-green { background-color: #16a34a; }
 .rpt-dot-blue { background-color: #3b82f6; }
-.rpt-dot-grey { background-color: #94a3b8; }
+.rpt-dot-grey { background-color: var(--text-muted); }
 .rpt-dot-red { background-color: #ef4444; }
 .rpt-dot-orange { background-color: #f97316; }
 
@@ -263,7 +263,7 @@
   justify-content: space-between;
   height: 100%;
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding-bottom: 24px; /* space for x axis */
 }
 
@@ -302,12 +302,12 @@
 
 .rpt-bg-green { background-color: #16a34a; }
 .rpt-bg-blue { background-color: #3b82f6; }
-.rpt-bg-grey { background-color: #94a3b8; }
+.rpt-bg-grey { background-color: var(--text-muted); }
 .rpt-bg-red { background-color: #ef4444; }
 
 .rpt-x-label {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   position: absolute;
   bottom: 0;
   white-space: nowrap;
@@ -338,7 +338,7 @@
 .rpt-donut-hole {
   width: 120px;
   height: 120px;
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 50%;
   display: flex;
   flex-direction: column;
@@ -349,7 +349,7 @@
 .rpt-donut-val {
   font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .rpt-donut-label {
@@ -397,10 +397,10 @@
 .rpt-workload-table th {
   text-align: left;
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-weight: 500;
   padding: 0 8px 12px 8px;
-  border-bottom: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   white-space: nowrap;
 }
 
@@ -472,7 +472,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #f1f5f9;
+  background: var(--bg-color);
   border: 2px solid #ffffff;
   display: flex;
   align-items: center;
@@ -497,7 +497,7 @@
 
 .rpt-progress-bar-bg {
   height: 6px;
-  background: #f1f5f9;
+  background: var(--bg-color);
   border-radius: 3px;
   overflow: hidden;
   width: 100%;
@@ -566,7 +566,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   height: 24px;
   align-items: flex-end;
 }
@@ -578,7 +578,7 @@
 }
 
 .rpt-info-icon {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .rpt-summary-metrics {
@@ -592,7 +592,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px;
-  background: #f8fafc;
+  background: var(--bg-color);
   border-radius: 8px;
 }
 
@@ -623,7 +623,7 @@
 .rpt-metric-val {
   font-size: 14px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .rpt-metric-trend {
@@ -655,12 +655,12 @@
 
 .rpt-team-rank-val {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .rpt-team-rank-bar-bg {
   height: 6px;
-  background: #f1f5f9;
+  background: var(--bg-color);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -715,7 +715,7 @@
 .rpt-recent-name {
   font-size: 13px;
   font-weight: 500;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .rpt-recent-date {
@@ -726,7 +726,7 @@
 .rpt-download-btn {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   display: flex;

@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100%;
   padding: 32px;
-  background-color: #FFFFFF;
+  background: var(--card-bg);
   overflow-y: auto;
 }
 
@@ -40,7 +40,7 @@
   gap: 6px;
   padding: 8px 12px;
   border: 1px solid var(--border-color);
-  background: white;
+  background: var(--card-bg);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -62,7 +62,7 @@
 
 .nav-arrow {
   padding: 8px;
-  background: white;
+  background: var(--card-bg);
   border: none;
   cursor: pointer;
   display: flex;
@@ -117,7 +117,7 @@
   flex: 1;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: white;
+  background: var(--card-bg);
   overflow: hidden;
 }
 
@@ -125,7 +125,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   border-bottom: 1px solid var(--border-color);
-  background-color: #ffffff;
+  background: var(--card-bg);
 }
 
 .day-name {
@@ -150,7 +150,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background-color: #ffffff;
+  background: var(--card-bg);
 }
 
 .calendar-cell:nth-child(7n) {
@@ -176,7 +176,7 @@
 }
 
 .calendar-cell.other-month .cell-date {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .calendar-cell.today .cell-date {
