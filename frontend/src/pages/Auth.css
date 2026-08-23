@@ -803,3 +803,13 @@
   .auth-right-content { overflow: visible; }
   .auth-form-container { padding: 2rem; }
 }
+
+.auth-submit-btn.success-anim {
+  animation: success-pulse 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes success-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}

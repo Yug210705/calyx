@@ -35,6 +35,7 @@ export const AuthPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
   
   // Dropdown state
   const [showLangDropdown, setShowLangDropdown] = useState(false);
@@ -61,6 +62,7 @@ export const AuthPage = () => {
     setError('');
     setMessage('');
     setOtpSent(false);
+    setSuccess(false);
   };
 
   const handleOAuth = async (provider: 'google' | 'azure') => {
@@ -110,8 +112,11 @@ export const AuthPage = () => {
         setError(error.message);
         setLoading(false);
       } else {
-        setDemoMode(false);
-        navigate('/');
+        setSuccess(true);
+        setTimeout(() => {
+          setDemoMode(false);
+          navigate('/');
+        }, 1500); // 1.5s delay for professional effect
       }
     }
   };
@@ -292,8 +297,20 @@ export const AuthPage = () => {
                 </div>
               )}
 
-              <button type="submit" className="auth-submit-btn" disabled={loading}>
-                {loading ? 'Please wait...' : (otpSent ? 'Verify Code' : 'Send Code')}
+              <button 
+                type="submit" 
+                className={`auth-submit-btn ${success ? 'success-anim' : ''}`} 
+                disabled={loading || success}
+                style={success ? { backgroundColor: '#10b981' } : {}}
+              >
+                {loading ? 'Please wait...' : 
+                  success ? (
+                    <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
+                      <CheckCircle2 size={18} /> Authenticated!
+                    </span>
+                  ) : (
+                    otpSent ? 'Verify Code' : 'Send Code'
+                  )}
               </button>
               
               {!isLogin && (
