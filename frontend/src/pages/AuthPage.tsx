@@ -128,7 +128,7 @@ export const AuthPage = () => {
       {/* LEFT PANEL */}
       <div className="auth-left-panel">
         <div className="auth-logo">
-          <img src={atlasLogo} alt="Atlas Logo" style={{ height: '36px', width: 'auto' }} />
+          <img src={atlasLogo} alt="Atlas Logo" style={{ maxHeight: '48px', width: 'auto', objectFit: 'contain' }} />
         </div>
         
         <h1 className="auth-hero-title">

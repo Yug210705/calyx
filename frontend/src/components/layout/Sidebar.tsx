@@ -231,8 +231,8 @@ export const Sidebar = () => {
     <aside className={clsx('sidebar', collapsed && 'sidebar--collapsed')}>
       {/* Header */}
       <div className="sidebar-header">
-        <div className="logo-container">
-          <img src={atlasLogo} alt="Atlas Logo" style={{ height: '32px', width: 'auto' }} />
+        <div className="logo-container" style={{ width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
+          <img src={atlasLogo} alt="Atlas Logo" style={{ maxHeight: '44px', width: 'auto', objectFit: 'contain', display: 'block' }} />
         </div>
         <button
           className="sidebar-toggle"
