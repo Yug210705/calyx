@@ -21,12 +21,12 @@ export const IntegrationsOverview = () => {
           <table className="intg-table">
             <thead>
               <tr>
-                <th style={{ width: '28%' }}>Integration</th>
-                <th style={{ width: '20%' }}>Category</th>
+                <th style={{ width: '26%' }}>Integration</th>
+                <th style={{ width: '18%' }}>Category</th>
                 <th style={{ width: '16%' }}>Status</th>
                 <th style={{ width: '13%' }}>Last Synced</th>
                 <th style={{ width: '9%' }}>Usage</th>
-                <th style={{ width: '14%', textAlign: 'right' }}>Actions</th>
+                <th style={{ width: '18%', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>

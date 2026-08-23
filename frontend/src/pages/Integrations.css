@@ -239,11 +239,12 @@
 }
 
 .intg-table-wrapper {
-  /* Removed border to match mockup */
+  overflow-x: auto;
 }
 
 .intg-table {
   width: 100%;
+  min-width: 700px;
   table-layout: fixed;
   border-collapse: collapse;
 }
