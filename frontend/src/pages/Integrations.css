@@ -340,7 +340,7 @@
   gap: 8px;
   font-size: 13px;
   font-weight: 500;
-  white-space: nowrap;
+  white-space: normal;
 }
 .intg-status-text-block {
   display: flex;
