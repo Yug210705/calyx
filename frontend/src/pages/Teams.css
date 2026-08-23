@@ -114,10 +114,10 @@
   flex-shrink: 0;
 }
 
-.kpi-icon.purple { background-color: #f3e8ff; color: #7e22ce; }
-.kpi-icon.blue { background-color: #dbeafe; color: #1d4ed8; }
-.kpi-icon.green { background-color: #dcfce7; color: #15803d; }
-.kpi-icon.orange { background-color: #ffedd5; color: #c2410c; }
+.kpi-icon.purple { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #7e22ce; }
+.kpi-icon.blue { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #1d4ed8; }
+.kpi-icon.green { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #15803d; }
+.kpi-icon.orange { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #c2410c; }
 
 .kpi-content {
   display: flex;
@@ -184,7 +184,7 @@
 }
 
 .badge-new {
-  background-color: #f3e8ff;
+  background-color: color-mix(in srgb, currentColor 15%, transparent);
   color: #7e22ce;
   font-size: 10px;
   padding: 2px 6px;
@@ -271,7 +271,7 @@
 .acronym-qa { background-color: #ef4444; }
 .acronym-ops { background-color: #06b6d4; }
 .acronym-hr { background-color: #f97316; }
-.acronym-fin { background-color: #64748b; }
+.acronym-fin { background-color: var(--text-secondary); }
 
 .desc-cell {
   color: var(--text-secondary);
@@ -296,7 +296,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid var(--card-bg);
   margin-left: -8px;
 }
 
@@ -337,7 +337,7 @@
 }
 
 .status-badge.active {
-  background-color: #dcfce7;
+  background-color: color-mix(in srgb, currentColor 15%, transparent);
   color: #166534;
 }
 
@@ -610,7 +610,7 @@
 }
 
 .role-name-input:focus, .role-name-input:hover {
-  border-bottom: 2px solid #cbd5e1 !important;
+  border-bottom: 2px solid var(--border-color-darker) !important;
 }
 
 /* iOS Toggle Switch */
@@ -631,7 +631,7 @@
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #cbd5e1;
+  background-color: var(--border-color-darker);
   transition: .4s;
 }
 

@@ -53,9 +53,9 @@
   justify-content: center;
 }
 .intg-stat-icon.purple { background: #F3E8FF; color: #7C3AED; }
-.intg-stat-icon.blue { background: #EFF6FF; color: #3B82F6; }
-.intg-stat-icon.green { background: #ECFDF5; color: #10B981; }
-.intg-stat-icon.orange { background: #FFF7ED; color: #F97316; }
+.intg-stat-icon.blue { background: color-mix(in srgb, currentColor 15%, transparent); color: #3B82F6; }
+.intg-stat-icon.green { background: color-mix(in srgb, currentColor 15%, transparent); color: #10B981; }
+.intg-stat-icon.orange { background: color-mix(in srgb, currentColor 15%, transparent); color: #F97316; }
 
 .intg-stat-info {
   display: flex;
@@ -236,7 +236,7 @@
   border-radius: 8px;
   background: var(--card-bg);
   font-size: 13px;
-  color: #374151;
+  color: var(--text-primary);
   cursor: pointer;
   outline: none;
 }
@@ -290,11 +290,11 @@
   font-size: 11px;
   font-weight: 600;
 }
-.intg-cat-tag.communication { background: #F5F3FF; color: #6D28D9; }
-.intg-cat-tag.storage { background: #EFF6FF; color: #1D4ED8; }
+.intg-cat-tag.communication { background: color-mix(in srgb, currentColor 15%, transparent); color: #6D28D9; }
+.intg-cat-tag.storage { background: color-mix(in srgb, currentColor 15%, transparent); color: #1D4ED8; }
 .intg-cat-tag.devops { background: #F0FDF4; color: #15803D; }
 .intg-cat-tag.project { background: #ECFEFF; color: #0E7490; }
-.intg-cat-tag.automation { background: #FFF7ED; color: #C2410C; }
+.intg-cat-tag.automation { background: color-mix(in srgb, currentColor 15%, transparent); color: #C2410C; }
 
 .intg-td-desc {
   color: var(--text-secondary);
@@ -339,7 +339,7 @@
   justify-content: center;
   border: 1px solid var(--border-color);
   background: var(--card-bg);
-  color: #374151;
+  color: var(--text-primary);
   border-radius: 6px;
   font-size: 13px;
   cursor: pointer;

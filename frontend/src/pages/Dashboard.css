@@ -36,7 +36,7 @@
 
 .header-search input {
   border: none;
-  background: none;
+  background: transparent;
   outline: none;
   font-size: 13px;
   flex: 1;
@@ -103,7 +103,7 @@
 }
 
 .welcome-section {
-  background: var(--card-bg);
+  background: var(--welcome-gradient);
   border-radius: var(--border-radius-lg);
   padding: 32px 32px 24px;
   border: 1px solid var(--border-color);

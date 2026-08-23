@@ -237,14 +237,14 @@
 }
 
 /* Color Themes */
-.event-theme-purple { background-color: #f3e8ff; color: #6b21a8; }
+.event-theme-purple { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #6b21a8; }
 .event-theme-purple .event-dot { background-color: #9333ea; }
 
-.event-theme-green { background-color: #dcfce7; color: #166534; }
+.event-theme-green { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #166534; }
 .event-theme-green .event-dot { background-color: #16a34a; }
 
 .event-theme-yellow { background-color: #fef3c7; color: #92400e; }
 .event-theme-yellow .event-dot { background-color: #d97706; }
 
-.event-theme-blue { background-color: #dbeafe; color: #1e40af; }
+.event-theme-blue { background-color: color-mix(in srgb, currentColor 15%, transparent); color: #1e40af; }
 .event-theme-blue .event-dot { background-color: #2563eb; }

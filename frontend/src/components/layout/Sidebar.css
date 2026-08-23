@@ -184,7 +184,7 @@
   width: 10px;
   height: 10px;
   background-color: var(--success);
-  border: 2px solid white;
+  border: 2px solid var(--card-bg);
   border-radius: 50%;
 }
 

@@ -77,7 +77,7 @@
   border-color: var(--border-color);
 }
 .set-header-right .set-btn-outline {
-  color: #374151;
+  color: var(--text-primary);
 }
 
 /* Top Tabs */
@@ -139,7 +139,7 @@
   color: var(--text-primary);
 }
 .set-side-tab.active {
-  background: #f3e8ff;
+  background-color: color-mix(in srgb, currentColor 15%, transparent);
   color: #7c3aed;
 }
 .set-side-tab.active svg {
@@ -300,7 +300,7 @@
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 13px;
-  color: #374151;
+  color: var(--text-primary);
   background: var(--card-bg);
   cursor: pointer;
   width: 160px;
@@ -328,7 +328,7 @@
 
 .color-green { color: #10b981; }
 .bg-green-light { 
-  background: #ecfdf5; 
+  background: color-mix(in srgb, currentColor 15%, transparent); 
   width: 32px; 
   height: 32px; 
   border-radius: 8px;
@@ -363,7 +363,7 @@
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 13px;
-  color: #374151;
+  color: var(--text-primary);
   background: var(--card-bg);
   cursor: pointer;
   appearance: none;

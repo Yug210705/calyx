@@ -77,7 +77,7 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: var(--card-bg);
-  color: #374151;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -112,7 +112,7 @@
 .intg-tabs {
   display: flex;
   gap: 32px;
-  border: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 32px;
 }
 
@@ -170,10 +170,10 @@
   flex-shrink: 0;
 }
 
-.intg-kpi-purple { background: #f5f3ff; color: #8b5cf6; }
-.intg-kpi-green { background: #ecfdf5; color: #10b981; }
-.intg-kpi-orange { background: #fff7ed; color: #f97316; }
-.intg-kpi-blue { background: #eff6ff; color: #3b82f6; }
+.intg-kpi-purple { background: color-mix(in srgb, currentColor 15%, transparent); color: #8b5cf6; }
+.intg-kpi-green { background: color-mix(in srgb, currentColor 15%, transparent); color: #10b981; }
+.intg-kpi-orange { background: color-mix(in srgb, currentColor 15%, transparent); color: #f97316; }
+.intg-kpi-blue { background: color-mix(in srgb, currentColor 15%, transparent); color: #3b82f6; }
 
 .intg-kpi-content {
   display: flex;
@@ -255,7 +255,7 @@
   font-weight: 600;
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
-  background: #fdfdfd;
+  background: var(--bg-color);
 }
 
 .intg-table td {
@@ -273,7 +273,7 @@
   cursor: pointer;
 }
 .intg-table tr.intg-row-active td {
-  background-color: #f5f3ff; /* subtle purple for active row */
+  background: color-mix(in srgb, currentColor 15%, transparent); /* subtle purple for active row */
 }
 
 /* Table Cells */
@@ -327,10 +327,10 @@
   font-weight: 500;
   white-space: nowrap;
 }
-.intg-badge-purple { background: #f5f3ff; color: #8b5cf6; }
-.intg-badge-blue { background: #eff6ff; color: #3b82f6; }
-.intg-badge-green { background: #ecfdf5; color: #10b981; }
-.intg-badge-orange { background: #fff7ed; color: #f97316; }
+.intg-badge-purple { background: color-mix(in srgb, currentColor 15%, transparent); color: #8b5cf6; }
+.intg-badge-blue { background: color-mix(in srgb, currentColor 15%, transparent); color: #3b82f6; }
+.intg-badge-green { background: color-mix(in srgb, currentColor 15%, transparent); color: #10b981; }
+.intg-badge-orange { background: color-mix(in srgb, currentColor 15%, transparent); color: #f97316; }
 
 /* Status */
 .intg-status {
@@ -410,7 +410,7 @@
   background: var(--card-bg);
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-primary);
   cursor: pointer;
 }
 
@@ -439,7 +439,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
   background: none;
   border-radius: 6px;
   font-size: 13px;
@@ -452,7 +452,7 @@
 .intg-pag-btn.active {
   border-color: #818cf8;
   color: #4f46e5;
-  background-color: #eef2ff;
+  background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
   font-weight: 500;
 }
 
@@ -505,7 +505,7 @@
   display: flex;
   gap: 20px;
   padding: 0 24px;
-  border: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .intg-sb-tab {
@@ -609,7 +609,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background-color: #fcfcfc;
+  background-color: var(--bg-color);
 }
 
 .intg-ubox-val {
@@ -666,7 +666,7 @@
 
 .intg-activity-text {
   font-size: 14px;
-  color: #374151;
+  color: var(--text-primary);
   line-height: 1.5;
 }
 
@@ -687,7 +687,7 @@
   padding: 10px;
   border: 1px solid var(--border-color);
   background: var(--card-bg);
-  color: #374151;
+  color: var(--text-primary);
   border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
@@ -698,7 +698,7 @@
 .intg-btn-danger-outline:hover {
   background: var(--bg-color);
   color: #ef4444;
-  border-color: #fca5a5;
+  border-color: var(--danger);
 }
 
 .intg-btn-danger-solid {

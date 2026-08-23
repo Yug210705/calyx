@@ -36,7 +36,7 @@
 
 .top-bar-search input {
   border: none;
-  background: none;
+  background: transparent;
   outline: none;
   width: 100%;
   font-size: 14px;

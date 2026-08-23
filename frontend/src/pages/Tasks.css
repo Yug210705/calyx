@@ -14,7 +14,7 @@
 
 /* ── Header Section ── */
 .tasks-welcome {
-  background: var(--card-bg);
+  background: var(--welcome-gradient);
   border-radius: var(--border-radius-lg);
   padding: 28px 32px 24px;
   border: 1px solid var(--border-color);
@@ -63,7 +63,7 @@
 
 .tasks-search-box input {
   border: none;
-  background: none;
+  background: transparent;
   outline: none;
   font-size: 14px;
   color: var(--text-primary);
@@ -132,7 +132,7 @@
 .tasks-filter-btn.active-filter {
   border-color: var(--primary-color);
   color: var(--primary-color);
-  background: #F5F3FF;
+  background: color-mix(in srgb, currentColor 15%, transparent);
 }
 
 .filter-badge {
@@ -246,7 +246,7 @@
 
 .board-column.drag-over {
   border-color: var(--primary-color);
-  background: #F5F3FF;
+  background: color-mix(in srgb, currentColor 15%, transparent);
   outline-color: var(--primary-color);
 }
 
@@ -806,7 +806,7 @@
   cursor: pointer;
   transition: all 0.1s;
   background: var(--card-bg);
-  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 
 .detail-action-btn:hover { background: var(--card-bg); border-color: var(--border-color); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -1046,7 +1046,7 @@
 
 .comment-send-btn.active {
   color: var(--primary-color);
-  background: #F5F3FF;
+  background: color-mix(in srgb, currentColor 15%, transparent);
 }
 .comment-send-btn.active:hover {
   background: var(--primary-color);

@@ -17,7 +17,7 @@
 
 /* Header Area */
 .projects-welcome-section {
-  background: var(--card-bg);
+  background: var(--welcome-gradient);
   border-radius: var(--border-radius-lg);
   padding: 32px 32px 24px;
   border: 1px solid var(--border-color);
@@ -75,7 +75,7 @@
 
 .search-box input {
   border: none;
-  background: none;
+  background: transparent;
   outline: none;
   width: 100%;
   font-size: 14px;
@@ -293,10 +293,10 @@
   font-weight: 600;
 }
 
-.status-progress { background-color: #EFF6FF; color: #2563EB; }
-.status-planning { background-color: #F5F3FF; color: #8B5CF6; }
+.status-progress { background: color-mix(in srgb, currentColor 15%, transparent); color: #2563EB; }
+.status-planning { background: color-mix(in srgb, currentColor 15%, transparent); color: #8B5CF6; }
 .status-hold { background-color: #FEF2F2; color: #EF4444; }
-.status-completed { background-color: #ECFDF5; color: #10B981; }
+.status-completed { background: color-mix(in srgb, currentColor 15%, transparent); color: #10B981; }
 
 .cell-progress {
   display: flex;
@@ -340,7 +340,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid var(--card-bg);
   margin-left: -10px;
   object-fit: cover;
 }
@@ -353,7 +353,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid var(--card-bg);
   background: var(--bg-color);
   display: flex;
   align-items: center;

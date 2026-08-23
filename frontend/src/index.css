@@ -1,6 +1,7 @@
 
 
 :root {
+  --welcome-gradient: linear-gradient(to bottom, color-mix(in srgb, var(--primary-color) 12%, var(--card-bg)), var(--card-bg));
   /* Brand Colors & Gradients */
   --primary-color: #6366F1; /* Indigo */
   --primary-gradient: linear-gradient(135deg, #8B5CF6 0%, #4F46E5 100%);
@@ -157,7 +158,7 @@ input, select, textarea, optgroup {
 
 /* Global Page Header (Gradient Bar) */
 .global-page-header {
-  background: var(--card-bg);
+  background: var(--welcome-gradient);
   border-radius: var(--border-radius-md);
   padding: 28px 32px 24px;
   border: 1px solid var(--border-color);
@@ -209,6 +210,8 @@ input, select, textarea, optgroup {
   --text-muted: #9CA3AF;
   --border-color: #374151;
   --border-color-darker: #4B5563;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="corporate"] {
@@ -265,6 +268,8 @@ input, select, textarea, optgroup {
   --text-muted: #94A3B8;
   --border-color: #334155;
   --border-color-darker: #475569;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="dracula"] {
@@ -281,6 +286,8 @@ input, select, textarea, optgroup {
   --text-muted: #6272A4;
   --border-color: #44475A;
   --border-color-darker: #6272A4;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="monochrome"] {
@@ -303,6 +310,6 @@ input, select, textarea, optgroup {
   --text-primary: #073642;
   --text-secondary: #586E75;
   --text-muted: #93A1A1;
-  --border-color: #D33682;
-  --border-color-darker: #CB4B16;
+  --border-color: #D6CABF;
+  --border-color-darker: #C4B5A5;
 }
