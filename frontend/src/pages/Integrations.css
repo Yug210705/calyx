@@ -244,7 +244,6 @@
 
 .intg-table {
   width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
 }
 
@@ -273,7 +272,7 @@
   cursor: pointer;
 }
 .intg-table tr.intg-row-active td {
-  background: color-mix(in srgb, currentColor 15%, transparent); /* subtle purple for active row */
+  background: color-mix(in srgb, var(--primary-color) 8%, transparent); 
 }
 
 /* Table Cells */
