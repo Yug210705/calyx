@@ -22,7 +22,7 @@ import {
   Activity
 } from 'lucide-react';
 import './Auth.css';
-import atlasLogo from '../../assets/atlaslogo.png';
+import atlasLogo from '../assets/atlaslogo.png';
 
 export const AuthPage = () => {
   const navigate = useNavigate();
