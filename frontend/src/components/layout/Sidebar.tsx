@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import atlasLogo from '../../assets/atlaslogo.png';
 import './Sidebar.css';
 
 // Sidebar context for collapse state
@@ -231,11 +232,7 @@ export const Sidebar = () => {
       {/* Header */}
       <div className="sidebar-header">
         <div className="logo-container">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 22H12V2Z" fill="#8B5CF6"/>
-            <path d="M12 2V22H22L12 2Z" fill="#3B82F6"/>
-          </svg>
-          {!collapsed && <span className="logo-text">atlas</span>}
+          <img src={atlasLogo} alt="Atlas Logo" style={{ height: '32px', width: 'auto' }} />
         </div>
         <button
           className="sidebar-toggle"

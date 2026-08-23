@@ -22,6 +22,7 @@ import {
   Activity
 } from 'lucide-react';
 import './Auth.css';
+import atlasLogo from '../../assets/atlaslogo.png';
 
 export const AuthPage = () => {
   const navigate = useNavigate();
@@ -126,9 +127,8 @@ export const AuthPage = () => {
       
       {/* LEFT PANEL */}
       <div className="auth-left-panel">
-        <div className="auth-left-header">
-          <Hexagon className="auth-logo-icon" size={32} />
-          <span className="auth-logo-text">atlas</span>
+        <div className="auth-logo">
+          <img src={atlasLogo} alt="Atlas Logo" style={{ height: '36px', width: 'auto' }} />
         </div>
         
         <h1 className="auth-hero-title">
