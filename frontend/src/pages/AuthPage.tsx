@@ -30,10 +30,11 @@ export const AuthPage = () => {
   
   const [isLogin, setIsLogin] = useState(location.pathname === '/login');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   
   // Dropdown state
   const [showLangDropdown, setShowLangDropdown] = useState(false);
@@ -58,33 +59,59 @@ export const AuthPage = () => {
     setIsLogin(login);
     navigate(login ? '/login' : '/register');
     setError('');
+    setMessage('');
+    setOtpSent(false);
+  };
+
+  const handleOAuth = async (provider: 'google' | 'azure') => {
+    setLoading(true);
+    setError('');
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: window.location.origin + '/'
+      }
+    });
+    if (error) setError(error.message);
+    setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setMessage('');
 
-    if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (!otpSent) {
+      // Step 1: Send OTP code
+      const { error } = await supabase.auth.signInWithOtp({ 
+        email,
+        options: {
+          shouldCreateUser: true // Allows both login and signup
+        }
+      });
+      
+      if (error) {
+        setError(error.message);
+      } else {
+        setOtpSent(true);
+        setMessage('A 6-digit verification code has been sent to your email.');
+      }
+      setLoading(false);
+    } else {
+      // Step 2: Verify OTP code
+      const { error } = await supabase.auth.verifyOtp({ 
+        email, 
+        token: otpCode, 
+        type: 'email' 
+      });
+      
       if (error) {
         setError(error.message);
         setLoading(false);
       } else {
         setDemoMode(false);
         navigate('/');
-      }
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: window.location.origin + '/login' }
-      });
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-      } else {
-        navigate('/verify-email');
       }
     }
   };
@@ -212,13 +239,14 @@ export const AuthPage = () => {
             </div>
 
             {error && <div className="auth-error-msg">{error}</div>}
+            {message && <div className="auth-error-msg" style={{backgroundColor: '#ecfdf5', color: '#065f46'}}>{message}</div>}
 
             <div className="auth-social-buttons">
-              <button className="auth-social-btn" type="button" onClick={() => navigate('/')}>
+              <button className="auth-social-btn" type="button" onClick={() => handleOAuth('google')}>
                 <img src="https://www.google.com/favicon.ico" alt="Google" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 Continue with Google
               </button>
-              <button className="auth-social-btn" type="button" onClick={() => navigate('/')}>
+              <button className="auth-social-btn" type="button" onClick={() => handleOAuth('azure')}>
                 <img src="https://www.microsoft.com/favicon.ico" alt="Microsoft" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 Continue with Microsoft
               </button>
@@ -242,44 +270,31 @@ export const AuthPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={otpSent}
                   />
                 </div>
               </div>
 
-              <div className="auth-input-group">
-                <label>Password</label>
-                <div className="auth-input-wrapper">
-                  <Lock className="auth-input-icon" size={18} />
-                  <input 
-                    type={showPassword ? 'text' : 'password'}
-                    className="auth-input" 
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <button 
-                    type="button" 
-                    className="auth-input-action"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? 'Hide' : 'Show'}
-                  </button>
-                </div>
-              </div>
-
-              {isLogin && (
-                <div className="auth-form-options">
-                  <label className="auth-checkbox-group">
-                    <input type="checkbox" />
-                    <span>Remember me</span>
-                  </label>
-                  <a href="#" className="auth-link">Forgot password?</a>
+              {otpSent && (
+                <div className="auth-input-group">
+                  <label>Verification Code</label>
+                  <div className="auth-input-wrapper">
+                    <Lock className="auth-input-icon" size={18} />
+                    <input 
+                      type="text"
+                      className="auth-input" 
+                      placeholder="Enter 6-digit code"
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value)}
+                      required
+                      maxLength={6}
+                    />
+                  </div>
                 </div>
               )}
 
               <button type="submit" className="auth-submit-btn" disabled={loading}>
-                {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
+                {loading ? 'Please wait...' : (otpSent ? 'Verify Code' : 'Send Code')}
               </button>
               
               {!isLogin && (
