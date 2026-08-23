@@ -121,7 +121,60 @@ export const Settings = () => {
         {/* Right Content Area */}
         <div className="set-content-area">
           
-          {(activeTopTab !== 'General' || activeSideTab !== 'Profile') ? (
+          {activeTopTab === 'General' && activeSideTab === 'Appearance' ? (
+            <div className="set-card" style={{ gridColumn: '1 / -1' }}>
+              <div className="set-card-header">
+                <div>
+                  <h2 className="set-card-title">Appearance Settings</h2>
+                  <p className="set-card-subtitle">Customize the look and feel of your Atlas workspace.</p>
+                </div>
+              </div>
+              <div style={{ padding: '24px 0' }}>
+                <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-secondary)' }}>THEME SELECTION</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
+                  {[
+                    { id: 'light', name: 'Light (Default)', colors: ['#ffffff', '#6366f1'] },
+                    { id: 'dark', name: 'Dark Mode', colors: ['#1f2937', '#9ca3af'] },
+                    { id: 'corporate', name: 'Corporate Blue', colors: ['#f8fafc', '#0284c7'] },
+                    { id: 'ocean', name: 'Ocean Teal', colors: ['#f0fdfa', '#0d9488'] },
+                    { id: 'sunset', name: 'Sunset Orange', colors: ['#fff7ed', '#f97316'] },
+                    { id: 'rose', name: 'Rose Pink', colors: ['#fff1f2', '#e11d48'] },
+                    { id: 'emerald', name: 'Emerald Green', colors: ['#ecfdf5', '#059669'] },
+                    { id: 'midnight', name: 'Midnight Deep', colors: ['#0f172a', '#818cf8'] },
+                    { id: 'dracula', name: 'Dracula', colors: ['#282a36', '#ff79c6'] },
+                    { id: 'monochrome', name: 'Monochrome', colors: ['#ffffff', '#171717'] },
+                    { id: 'solarized', name: 'Solarized Light', colors: ['#fdf6e3', '#268bd2'] }
+                  ].map(theme => (
+                    <button 
+                      key={theme.id}
+                      onClick={() => {
+                        localStorage.setItem('atlas_theme', theme.id);
+                        if (theme.id === 'light') {
+                          document.documentElement.removeAttribute('data-theme');
+                        } else {
+                          document.documentElement.setAttribute('data-theme', theme.id);
+                        }
+                      }}
+                      style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+                        padding: '16px', border: '1px solid var(--border-color)', borderRadius: '8px',
+                        background: 'var(--card-bg)', cursor: 'pointer', transition: 'all 0.2s',
+                        textAlign: 'left'
+                      }}
+                      onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--primary-color)'}
+                      onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--border-color)'}
+                    >
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: theme.colors[0], border: '1px solid #e5e7eb' }}></div>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: theme.colors[1] }}></div>
+                      </div>
+                      <span style={{ fontWeight: 500, color: 'var(--text-primary)', fontSize: '14px' }}>{theme.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (activeTopTab !== 'General' || activeSideTab !== 'Profile') ? (
             <div className="set-card" style={{ gridColumn: '1 / -1' }}>
               <div className="set-card-header">
                 <div>

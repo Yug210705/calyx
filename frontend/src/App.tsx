@@ -41,6 +41,15 @@ const ProtectedLayout = () => {
 };
 
 function App() {
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('atlas_theme') || 'light';
+    if (savedTheme !== 'light') {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
