@@ -66,7 +66,8 @@ export const ProjectGraphModal: React.FC<ProjectGraphModalProps> = ({ projectNam
       const connectedNode = isSource ? link.target : link.source;
       return {
         node: connectedNode as any,
-        label: link.label || (isSource ? 'links to' : 'linked from')
+        label: link.label || (isSource ? 'links to' : 'linked from'),
+        date: link.date
       };
     });
   };
@@ -164,6 +165,7 @@ export const ProjectGraphModal: React.FC<ProjectGraphModalProps> = ({ projectNam
               <div className="graph-legend-title">Legend</div>
               <div className="graph-legend-item"><div className="graph-legend-dot" style={{background: '#8b5cf6'}}></div>Project</div>
               <div className="graph-legend-item"><div className="graph-legend-dot" style={{background: '#3b82f6'}}></div>Module</div>
+              <div className="graph-legend-item"><div className="graph-legend-dot" style={{background: '#06b6d4'}}></div>Component</div>
               <div className="graph-legend-item"><div className="graph-legend-dot" style={{background: '#10b981'}}></div>Technology</div>
               <div className="graph-legend-item"><div className="graph-legend-dot" style={{background: '#f59e0b'}}></div>Database</div>
               <div className="graph-legend-item"><div className="graph-legend-dot" style={{background: '#ec4899'}}></div>Team Member</div>
@@ -177,6 +179,11 @@ export const ProjectGraphModal: React.FC<ProjectGraphModalProps> = ({ projectNam
               </div>
               <h3 className="node-detail-title">{selectedNode.name}</h3>
               <p className="node-detail-desc">{selectedNode.desc}</p>
+              {selectedNode.lastUpdated && (
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 24 }}>
+                  Last updated: {selectedNode.lastUpdated}
+                </div>
+              )}
 
               <div className="node-detail-links">
                 <h4 className="node-detail-links-header">Connections</h4>
@@ -188,7 +195,12 @@ export const ProjectGraphModal: React.FC<ProjectGraphModalProps> = ({ projectNam
                       onClick={() => handleNodeClick(conn.node)}
                     >
                       <div className="node-detail-link-dot" style={{ background: conn.node.color }}></div>
-                      <span className="node-detail-link-text">{conn.node.name}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
+                        <span className="node-detail-link-text">{conn.node.name}</span>
+                        {conn.date && (
+                          <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{conn.date}</span>
+                        )}
+                      </div>
                       <span className="node-detail-link-label">{conn.label}</span>
                     </div>
                   ))}
