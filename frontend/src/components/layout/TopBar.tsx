@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, ChevronDown, User, Settings, LogOut, MessageSquare, AlertCircle, Menu } from 'lucide-react';
+import { Search, Bell, User, Settings, LogOut, MessageSquare, AlertCircle, Menu, HelpCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { useSidebar } from './Sidebar';
@@ -30,16 +30,19 @@ export const TopBar = () => {
 
   return (
     <header className="top-bar">
-      <button 
-        className="hamburger-btn"
-        onClick={() => setCollapsed(!collapsed)}
-        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-      >
-        <Menu size={20} />
-      </button>
-      <div className="top-bar-search">
-        <Search size={16} className="search-icon" />
-        <input type="text" placeholder="Search projects..." />
+      <div className="top-bar-left">
+        <button 
+          className="hamburger-btn"
+          onClick={() => setCollapsed(!collapsed)}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          <Menu size={20} color="#6b7280" />
+        </button>
+        <div className="top-bar-search">
+          <Search size={16} className="search-icon" color="#9ca3af" />
+          <input type="text" placeholder="Search projects, tasks, teams..." />
+          <div className="search-shortcut">⌘ K</div>
+        </div>
       </div>
       
       <div className="top-bar-actions">
@@ -50,7 +53,7 @@ export const TopBar = () => {
             className={`icon-btn bell-btn ${showNotifications ? 'active' : ''}`}
             onClick={() => setShowNotifications(!showNotifications)}
           >
-            <Bell size={20} />
+            <Bell size={20} color="#4b5563" />
             <span className="badge">3</span>
           </button>
           
@@ -89,6 +92,11 @@ export const TopBar = () => {
             </div>
           )}
         </div>
+
+        {/* Help Icon */}
+        <button className="icon-btn help-btn">
+          <HelpCircle size={20} color="#4b5563" />
+        </button>
         
         {/* Profile Dropdown */}
         <div className="dropdown-container" ref={profileRef}>
@@ -98,10 +106,9 @@ export const TopBar = () => {
           >
             <img src={isDemoMode ? "https://i.pravatar.cc/150?u=demo" : "https://i.pravatar.cc/150?u=yug"} alt="User Profile" className="profile-avatar" />
             <div className="profile-info">
-              <div className="profile-name">{isDemoMode ? "Guest User" : (user?.email?.split('@')[0] || "User")}</div>
+              <div className="profile-name">{isDemoMode ? "Guest User" : (user?.email?.split('@')[0] || "Yug Pathak")}</div>
               <div className="profile-role">{isDemoMode ? "Demo Mode" : "Admin"}</div>
             </div>
-            <ChevronDown size={14} className="profile-chevron" />
           </div>
 
           {showProfile && (
