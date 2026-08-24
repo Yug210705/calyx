@@ -14,6 +14,7 @@ import {
   Shield,
   Activity,
   User,
+  Users,
   Clock,
   ArrowRight
 } from 'lucide-react';
