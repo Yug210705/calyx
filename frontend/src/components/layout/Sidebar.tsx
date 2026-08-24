@@ -154,7 +154,9 @@ export const Sidebar = () => {
       {!collapsed && (
         <div className="sidebar-footer">
           <div className="org-switcher">
-            <div className="org-logo">A</div>
+            <div className="org-logo">
+              <img src={atlasLogo} alt="Atlas Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            </div>
             <div className="org-info">
               <div className="org-name">Atlas Organization</div>
               <div className="org-plan">Enterprise Plan</div>
