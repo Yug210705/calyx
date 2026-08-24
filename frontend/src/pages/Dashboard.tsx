@@ -185,11 +185,18 @@ export const Dashboard = () => {
 
           {/* Workspace Analytics */}
           <div className="dash-card analytics-card">
-            <div className="dash-card-header" style={{marginBottom:0}}>
+            <div className="analytics-header">
               <h3 className="dash-card-title">Workspace Analytics</h3>
-              <button className="date-picker-btn" style={{padding:'4px 12px',height:28,fontSize:12}}>
-                This Week <ChevronDown size={13} style={{marginLeft:4}} />
-              </button>
+              <div className="analytics-range-tabs">
+                {['Hour','Day','Week','Month','Year'].map(tab => (
+                  <button 
+                    key={tab} 
+                    className={`range-tab ${tab === 'Week' ? 'active' : ''}`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="analytics-kpis">
@@ -230,23 +237,27 @@ export const Dashboard = () => {
 
             <div className="analytics-chart-wrapper">
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={areaData} margin={{top:5,right:10,left:-10,bottom:0}}>
+                <AreaChart data={areaData} margin={{top:5,right:20,left:0,bottom:5}}>
                   <defs>
                     <linearGradient id="gCreated" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.08}/>
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
                       <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="gCompleted" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.08}/>
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
                       <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid vertical={false} stroke="#f3f4f6" />
+                  <CartesianGrid vertical={false} stroke="#f0f1f5" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill:'#9ca3af',fontSize:11}} dy={8} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill:'#9ca3af',fontSize:11}} />
-                  <Tooltip contentStyle={{borderRadius:8,border:'1px solid #e5e7eb',boxShadow:'0 4px 12px rgba(0,0,0,0.08)'}} />
-                  <Area type="monotone" dataKey="created" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#gCreated)" dot={false} />
-                  <Area type="monotone" dataKey="completed" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#gCompleted)" dot={false} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill:'#9ca3af',fontSize:11}} width={35} />
+                  <Tooltip 
+                    contentStyle={{borderRadius:10,border:'1px solid #e5e7eb',boxShadow:'0 4px 16px rgba(0,0,0,0.1)',padding:'10px 14px',fontSize:13}}
+                    labelStyle={{fontWeight:600,marginBottom:4}}
+                    itemStyle={{padding:'2px 0'}}
+                  />
+                  <Area type="monotone" dataKey="created" name="Tasks Created" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#gCreated)" dot={false} activeDot={{r:4,strokeWidth:2,fill:'#fff'}} />
+                  <Area type="monotone" dataKey="completed" name="Tasks Completed" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#gCompleted)" dot={false} activeDot={{r:4,strokeWidth:2,fill:'#fff'}} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
