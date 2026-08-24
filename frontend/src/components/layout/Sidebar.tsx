@@ -9,34 +9,9 @@ import {
   BarChart2, 
   Blocks, 
   Settings,
-  ChevronDown,
-  PanelLeftClose,
-  PanelLeft,
-  Star,
-  HelpCircle,
-  ExternalLink,
-  CalendarDays,
-  UsersRound,
-  FolderOpen,
-  ListTodo,
-  KanbanSquare,
-  GanttChart,
-  LayoutGrid,
-  Clock,
-  TrendingUp,
-  PieChart,
-  FileBarChart,
-  Layers,
-  Timer,
-  Puzzle,
-  Zap,
-  Database,
-  Globe,
-  UserCog,
-  Shield,
-  Bell,
-  Palette,
-  Key
+  ChevronUp,
+  ArrowRight,
+  ChevronsLeft
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
@@ -63,157 +38,7 @@ const navItems = [
   { name: 'Settings', icon: Settings, path: '/settings' },
 ];
 
-// Contextual sidebar content per page
-const contextualSections: Record<string, { sections: { title: string; items: { name: string; icon: React.ElementType; color?: string; subtitle?: string; active?: boolean }[]; viewAllLink?: string }[] }> = {
-  '/': {
-    sections: [
-      {
-        title: 'STARRED PROJECTS',
-        items: [
-          { name: 'Atlas Mobile App', icon: Star, color: '#6366F1' },
-          { name: 'Website Redesign', icon: Star, color: '#06B6D4' },
-          { name: 'Internal Dashboard', icon: Star, color: '#F59E0B' },
-        ]
-      }
-    ]
-  },
-  '/projects': {
-    sections: [
-      {
-        title: 'PROJECT VIEWS',
-        items: [
-          { name: 'All Projects', icon: LayoutGrid, active: true },
-          { name: 'Board View', icon: KanbanSquare },
-          { name: 'Timeline', icon: GanttChart },
-        ]
-      },
-      {
-        title: 'RECENT PROJECTS',
-        items: [
-          { name: 'Atlas Mobile App', icon: Star, color: '#6366F1' },
-          { name: 'Website Redesign', icon: Star, color: '#06B6D4' },
-          { name: 'AI Dashboard', icon: Star, color: '#10B981' },
-        ],
-        viewAllLink: '/projects'
-      }
-    ]
-  },
-  '/tasks': {
-    sections: [
-      {
-        title: 'TASK VIEWS',
-        items: [
-          { name: 'My Tasks', icon: ListTodo, active: true },
-          { name: 'Board View', icon: KanbanSquare },
-          { name: 'Timeline', icon: GanttChart },
-        ]
-      },
-      {
-        title: 'DUE SOON',
-        items: [
-          { name: 'API Integration', icon: Clock, color: '#EF4444', subtitle: 'Due today' },
-          { name: 'Landing Page Design', icon: Clock, color: '#F59E0B', subtitle: 'Due tomorrow' },
-          { name: 'Schema Design', icon: Clock, color: '#10B981', subtitle: 'May 25' },
-        ],
-        viewAllLink: '/tasks'
-      }
-    ]
-  },
-  '/calendar': {
-    sections: [
-      {
-        title: 'CALENDAR VIEWS',
-        items: [
-          { name: 'My Calendar', icon: CalendarDays, color: '#6366F1', active: true },
-          { name: 'Team Calendar', icon: UsersRound, color: '#64748B' },
-          { name: 'Project Calendar', icon: FolderOpen, color: '#10B981' },
-        ]
-      },
-      {
-        title: 'UPCOMING',
-        items: [
-          { name: 'Sprint Planning', icon: Clock, color: '#6366F1', subtitle: 'May 20, 10:00 AM' },
-          { name: 'Design Review', icon: Clock, color: '#10B981', subtitle: 'May 22, 02:00 PM' },
-          { name: 'Release v1.0', icon: Clock, color: '#F59E0B', subtitle: 'May 30, 09:00 AM' },
-        ],
-        viewAllLink: '/calendar'
-      }
-    ]
-  },
-  '/teams': {
-    sections: [
-      {
-        title: 'TEAM VIEWS',
-        items: [
-          { name: 'All Teams', icon: Users, active: true },
-          { name: 'Workload', icon: BarChart2 },
-          { name: 'Roles & Access', icon: Shield },
-        ]
-      },
-      {
-        title: 'YOUR TEAMS',
-        items: [
-          { name: 'Engineering', icon: Star, color: '#3B82F6' },
-          { name: 'Product', icon: Star, color: '#10B981' },
-          { name: 'Design', icon: Star, color: '#F59E0B' },
-        ]
-      }
-    ]
-  },
-  '/activity': {
-    sections: [
-      {
-        title: 'ACTIVITY FILTERS',
-        items: [
-          { name: 'All Activity', icon: Activity, active: true },
-          { name: 'Mentions', icon: Bell },
-          { name: 'Updates', icon: TrendingUp },
-        ]
-      }
-    ]
-  },
-  '/reports': {
-    sections: [
-      {
-        title: 'REPORT TYPES',
-        items: [
-          { name: 'Overview', icon: PieChart, active: true },
-          { name: 'Projects', icon: FolderKanban },
-          { name: 'Tasks', icon: FileBarChart },
-          { name: 'Teams', icon: Users },
-        ]
-      }
-    ]
-  },
-  '/integrations': {
-    sections: [
-      {
-        title: 'CATEGORIES',
-        items: [
-          { name: 'All Integrations', icon: Layers, active: true },
-          { name: 'Automation', icon: Zap },
-          { name: 'Database', icon: Database },
-          { name: 'Communication', icon: Globe },
-        ]
-      }
-    ]
-  },
-  '/settings': {
-    sections: [
-      {
-        title: 'SETTINGS',
-        items: [
-          { name: 'Profile', icon: UserCog, active: true },
-          { name: 'Notifications', icon: Bell },
-          { name: 'Appearance', icon: Palette },
-          { name: 'Security', icon: Key },
-        ]
-      }
-    ]
-  },
-};
-
-export const SidebarProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
@@ -225,95 +50,90 @@ export const SidebarProvider: React.FC<{children: React.ReactNode}> = ({ childre
 export const Sidebar = () => {
   const location = useLocation();
   const { collapsed, setCollapsed } = useSidebar();
-  const contextual = contextualSections[location.pathname];
+  const currentPath = location.pathname;
 
   return (
-    <aside className={clsx('sidebar', collapsed && 'sidebar--collapsed')}>
-      {/* Header */}
+    <aside className={clsx('sidebar', { collapsed })}>
       <div className="sidebar-header">
-        <div className="logo-container" style={{ width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
-          <img src={atlasLogo} alt="Atlas Logo" style={{ maxHeight: '44px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+        <Link to="/" className="sidebar-logo">
+          <img src={atlasLogo} alt="Atlas Logo" className="logo-img" />
+          {!collapsed && <span className="logo-text">atlas</span>}
+        </Link>
+      </div>
+
+      <nav className="sidebar-nav custom-scrollbar">
+        <div className="nav-section">
+          {navItems.map((item) => (
+            <Link 
+              key={item.name} 
+              to={item.path} 
+              className={clsx('nav-item', { active: currentPath === item.path })}
+            >
+              <item.icon size={18} className="nav-icon" />
+              {!collapsed && <span className="nav-label">{item.name}</span>}
+            </Link>
+          ))}
         </div>
-        <button
-          className="sidebar-toggle"
-          onClick={() => setCollapsed(!collapsed)}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
-        </button>
-      </div>
-      
-      {/* Navigation */}
-      <div className="sidebar-scrollable">
-        <nav className="sidebar-nav">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            const Icon = item.icon;
-            
-            return (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={clsx('nav-item', isActive && 'active')}
-                title={collapsed ? item.name : undefined}
-              >
-                <Icon className="nav-icon" size={18} />
-                {!collapsed && <span className="nav-label">{item.name}</span>}
-              </Link>
-            );
-          })}
-        </nav>
 
-        {/* Contextual Sections */}
-        {!collapsed && contextual && contextual.sections.map((section, sIdx) => (
-          <div className="sidebar-section" key={sIdx}>
-            <h3 className="section-title">{section.title}</h3>
-            <ul className="context-list">
-              {section.items.map((item) => (
-                <li key={item.name} className={clsx('context-item', item.active && 'context-item--active')}>
-                  {item.color ? (
-                    <span className="project-dot" style={{ backgroundColor: item.color }} />
-                  ) : (
-                    <item.icon size={15} className="context-icon" />
-                  )}
-                  <div className="context-text">
-                    <span className="context-name">{item.name}</span>
-                    {item.subtitle && <span className="context-subtitle">{item.subtitle}</span>}
-                  </div>
-                </li>
-              ))}
-            </ul>
-            {section.viewAllLink && (
-              <Link to={section.viewAllLink} className="context-view-all">View all</Link>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Footer */}
-      <div className="sidebar-footer">
-        {!collapsed ? (
-          <>
-            <a href="https://docs.atlas.app" target="_blank" rel="noreferrer" className="sidebar-help-link">
-              <HelpCircle size={14} />
-              <span>Help & Documentation</span>
-              <ExternalLink size={12} />
-            </a>
-            <div className="sidebar-org">
-              <div className="org-icon">A</div>
-              <div className="org-info">
-                <div className="org-name">Atlas Organization</div>
-                <div className="org-plan">Enterprise Plan</div>
+        {!collapsed && (
+          <div className="sidebar-starred-section">
+            <h4 className="starred-title">STARRED PROJECTS</h4>
+            <div className="starred-list">
+              <div className="starred-item">
+                <div className="starred-dot" style={{ backgroundColor: '#3b82f6' }}></div>
+                <span>Atlas Mobile App</span>
               </div>
-              <ChevronDown size={14} className="org-chevron" />
+              <div className="starred-item">
+                <div className="starred-dot" style={{ backgroundColor: '#10b981' }}></div>
+                <span>Website Redesign</span>
+              </div>
+              <div className="starred-item">
+                <div className="starred-dot" style={{ backgroundColor: '#f59e0b' }}></div>
+                <span>Internal Dashboard</span>
+              </div>
+              <div className="starred-item">
+                <div className="starred-dot" style={{ backgroundColor: '#8b5cf6' }}></div>
+                <span>Marketing Website</span>
+              </div>
             </div>
-          </>
-        ) : (
-          <div className="sidebar-org sidebar-org--collapsed" title="Atlas Organization">
-            <div className="org-icon">A</div>
+            <Link to="/projects" className="view-all-projects">
+              <ArrowRight size={14} /> View all projects
+            </Link>
           </div>
         )}
-      </div>
+      </nav>
+
+      {!collapsed && (
+        <div className="sidebar-footer">
+          <div className="org-switcher">
+            <div className="org-logo">A</div>
+            <div className="org-info">
+              <div className="org-name">Atlas Organization</div>
+              <div className="org-plan">Enterprise Plan</div>
+            </div>
+            <ChevronUp size={16} className="org-chevron" />
+          </div>
+
+          <div className="plan-usage">
+            <div className="plan-usage-header">
+              <span>Plan usage</span>
+              <span>78%</span>
+            </div>
+            <div className="plan-usage-bar">
+              <div className="plan-usage-progress" style={{ width: '78%' }}></div>
+            </div>
+            <div className="plan-usage-text">156 GB / 200 GB used</div>
+            <Link to="/settings" className="manage-subscription">
+              Manage subscription <ArrowRight size={12} />
+            </Link>
+          </div>
+        </div>
+      )}
+
+      <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+        <ChevronsLeft size={16} />
+        {!collapsed && <span>Collapse</span>}
+      </button>
     </aside>
   );
 };
