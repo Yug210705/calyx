@@ -1,0 +1,314 @@
+.audit-logs-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--bg-color, #f8f9fa);
+  padding: 32px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.audit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.audit-header-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.audit-header-icon {
+  color: var(--primary-color, #4f46e5);
+}
+
+.audit-header-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary, #4b5563);
+}
+
+.audit-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid var(--border-color, #e5e7eb);
+  color: var(--text-primary, #111827);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-export:hover {
+  background: var(--bg-color, #f9fafb);
+  border-color: var(--border-color-darker, #d1d5db);
+}
+
+.filters-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #4b5563);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filter-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted, #9ca3af);
+  pointer-events: none;
+}
+
+.filter-input, .filter-select {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text-primary, #111827);
+  background: white;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.filter-input:focus, .filter-select:focus {
+  border-color: var(--primary-color, #4f46e5);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.filter-select {
+  appearance: none;
+}
+
+.table-container {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.audit-table th {
+  background: var(--bg-color, #f9fafb);
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #4b5563);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.audit-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  font-size: 14px;
+  color: var(--text-primary, #111827);
+  vertical-align: top;
+}
+
+.audit-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.audit-table tbody tr:hover {
+  background: var(--bg-color, #f9fafb);
+}
+
+.audit-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.td-timestamp {
+  white-space: nowrap;
+  color: var(--text-secondary, #4b5563);
+  font-variant-numeric: tabular-nums;
+}
+
+.td-actor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.actor-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-color, #f3f4f6);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.actor-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.actor-name {
+  font-weight: 500;
+  color: var(--text-primary, #111827);
+}
+
+.actor-email {
+  font-size: 12px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.td-action {
+  font-weight: 500;
+}
+
+.td-target {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  color: var(--text-secondary, #4b5563);
+  background: var(--bg-color, #f3f4f6);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  word-break: break-all;
+}
+
+.td-ip {
+  color: var(--text-secondary, #6b7280);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success, #059669);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-failure {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger, #dc2626);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: var(--card-bg, #ffffff);
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: var(--text-secondary, #4b5563);
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: white;
+  color: var(--text-secondary, #4b5563);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-page:hover:not(:disabled) {
+  background: var(--bg-color, #f9fafb);
+  color: var(--text-primary, #111827);
+}
+
+.btn-page:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .filters-bar {
+    flex-wrap: wrap;
+  }
+  .filter-group {
+    min-width: calc(50% - 16px);
+  }
+}
+
+@media (max-width: 768px) {
+  .audit-logs-container {
+    padding: 16px;
+  }
+  .audit-table th, .audit-table td {
+    padding: 12px;
+  }
+  .td-target, .td-ip {
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
