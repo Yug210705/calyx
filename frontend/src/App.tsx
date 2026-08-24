@@ -10,6 +10,17 @@ import { Activity } from './pages/Activity';
 import { Reports } from './pages/Reports';
 import { Integrations } from './pages/Integrations';
 import { Settings } from './pages/Settings';
+import { MyWork } from './pages/MyWork';
+import { Roadmap } from './pages/Roadmap';
+import { Inbox } from './pages/Inbox';
+import { Backlog } from './pages/Backlog';
+import { Sprints } from './pages/Sprints';
+import { Goals } from './pages/Goals';
+import { Documents } from './pages/Documents';
+import { Files } from './pages/Files';
+import { Analytics } from './pages/Analytics';
+import { Members } from './pages/Members';
+import { AuditLogs } from './pages/AuditLogs';
 import { AuthPage } from './pages/AuthPage';
 import { VerifyEmail } from './pages/VerifyEmail';
 import { TopBar } from './components/layout/TopBar';
@@ -70,6 +81,17 @@ function App() {
             <Route path="/reports" element={<Reports />} />
             <Route path="/integrations" element={<Integrations />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/my-work" element={<MyWork />} />
+            <Route path="/roadmap" element={<Roadmap />} />
+            <Route path="/inbox" element={<Inbox />} />
+            <Route path="/backlog" element={<Backlog />} />
+            <Route path="/sprints" element={<Sprints />} />
+            <Route path="/goals" element={<Goals />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/files" element={<Files />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/members" element={<Members />} />
+            <Route path="/audit-logs" element={<AuditLogs />} />
           </Route>
         </Routes>
       </Router>

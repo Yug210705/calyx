@@ -1,0 +1,423 @@
+.goals-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--bg-color);
+  padding: 32px;
+  gap: 24px;
+}
+
+.goals-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.goals-header-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.goals-header-content p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 15px;
+  max-width: 600px;
+}
+
+.goals-header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+}
+
+.search-bar input {
+  padding: 10px 16px 10px 36px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  width: 240px;
+  transition: all 0.2s;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.primary-button, .secondary-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+}
+
+.primary-button {
+  background: var(--primary-gradient, linear-gradient(135deg, #007bff 0%, #0056b3 100%));
+  color: white;
+}
+
+.primary-button:hover {
+  opacity: 0.9;
+}
+
+.secondary-button {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.secondary-button:hover {
+  background-color: var(--border-color);
+}
+
+.goals-overview-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.overview-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.overview-title {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.overview-value {
+  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.overview-value.danger {
+  color: var(--danger);
+}
+
+.overview-trend {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.overview-trend.positive { color: var(--success); }
+.overview-trend.negative { color: var(--danger); }
+.overview-trend.neutral { color: var(--text-muted); }
+
+.goals-hierarchy-view {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.view-header h2 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.view-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.goals-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.goal-node-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-children {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.hierarchy-line {
+  position: absolute;
+  top: -16px;
+  bottom: 16px;
+  width: 2px;
+  background-color: var(--border-color);
+  z-index: 1;
+}
+
+.goal-card {
+  position: relative;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  z-index: 2;
+}
+
+.goal-card:hover {
+  border-color: var(--border-color-darker);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.goal-card.level-company { border-left: 4px solid #9b59b6; }
+.goal-card.level-team { border-left: 4px solid #3498db; }
+.goal-card.level-project { border-left: 4px solid #1abc9c; }
+.goal-card.level-task { border-left: 4px solid #95a5a6; }
+
+.goal-card-main {
+  display: flex;
+  width: 100%;
+  gap: 16px;
+}
+
+.goal-expand-toggle {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 2px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.goal-expand-toggle:hover {
+  color: var(--text-primary);
+}
+
+.toggle-placeholder {
+  width: 18px;
+  height: 18px;
+}
+
+.goal-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.goal-title-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level-icon.company { color: #9b59b6; }
+.level-icon.team { color: #3498db; }
+.level-icon.project { color: #1abc9c; }
+.level-icon.task { color: #95a5a6; }
+
+.goal-id {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
+  background: var(--bg-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.goal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.goal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button:hover {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+}
+
+.goal-description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.goal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background-color: var(--bg-color);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.meta-item.metric {
+  color: var(--info);
+  background-color: rgba(41, 128, 185, 0.05);
+  border-color: rgba(41, 128, 185, 0.1);
+  font-weight: 500;
+}
+
+.owner-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.goal-progress-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 24px;
+  border-left: 1px solid var(--border-color);
+}
+
+.progress-ring-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  stroke: var(--border-color);
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+.progress-ring-text {
+  position: absolute;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .goals-container {
+    padding: 16px;
+  }
+  
+  .goal-card-main {
+    flex-direction: column;
+  }
+  
+  .goal-progress-section {
+    padding-left: 0;
+    padding-top: 16px;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    justify-content: flex-start;
+  }
+  
+  .goal-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
