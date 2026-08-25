@@ -64,7 +64,21 @@ export const api = {
 };
 
 export const authService = {
-  login: (data: any) => api.post('/auth/login', data),
+  login: async (data: any) => {
+    const params = new URLSearchParams();
+    params.append('username', data.email);
+    params.append('password', data.password);
+    
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
+    });
+    if (!response.ok) throw new Error(`API POST Error: ${response.statusText}`);
+    return response.json();
+  },
   signup: (data: any) => api.post('/auth/signup', data),
 };
 
