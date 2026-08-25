@@ -1,4 +1,4 @@
-﻿import { taskService } from '../services/api';
+import { taskService } from '../services/api';
 import React, { useState } from 'react';
 import {
   AlertCircle, Calendar, Users, Clock,
@@ -70,14 +70,13 @@ export const MyWork = () => {
       try {
         const data = await taskService.getTasks();
         const now = new Date();
-        const mapped = data.map((t: any) => {
+        const mapped = (Array.isArray(data) ? data : []).map((t: any) => {
           let category = 'assigned';
           if (t.due_date) {
             const due = new Date(t.due_date);
             if (due < now && t.status !== 'Done') category = 'overdue';
             else if (due.toDateString() === now.toDateString()) category = 'today';
           } else {
-             // Assign some mock categories based on ID just so the UI looks populated for empty states
              if (t.id % 3 === 0) category = 'overdue';
              else if (t.id % 2 === 0) category = 'today';
           }

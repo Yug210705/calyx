@@ -66,7 +66,7 @@ export const Projects = () => {
     try {
       setIsLoading(true);
       const data = await projectService.getProjects();
-      setProjects(data);
+      setProjects(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading projects:", error);
     } finally {

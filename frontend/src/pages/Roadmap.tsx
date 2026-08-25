@@ -1,4 +1,4 @@
-﻿import { projectService } from '../services/api';
+import { projectService } from '../services/api';
 import React, { useState, useEffect } from 'react';
 import {
   Search, Plus, Filter, LayoutGrid, Calendar, Target,
@@ -60,7 +60,7 @@ export const Roadmap = () => {
       try {
         const data = await projectService.getProjects();
         const currentMonth = new Date().getMonth() + 1;
-        const mapped: Epic[] = data.map((p: any) => {
+        const mapped: Epic[] = (Array.isArray(data) ? data : []).map((p: any) => {
            const idStr = p.id.toString();
            // pseudo-random generation based on id for visualization purposes
            const teamIdx = p.id % TEAMS.length;

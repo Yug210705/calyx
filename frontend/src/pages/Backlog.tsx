@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+﻿import { taskService } from '../services/api';
+import React, { useState, useEffect } from 'react';
 import {
   Search, ChevronDown, ChevronRight, Plus, X, Star,
   Filter, MoreHorizontal, GripVertical, Calendar,
@@ -7,7 +8,7 @@ import {
 } from 'lucide-react';
 import './Backlog.css';
 
-/* ── Types ── */
+/* â”€â”€ Types â”€â”€ */
 interface BacklogItem {
   id: number;
   key: string;
@@ -21,7 +22,7 @@ interface BacklogItem {
   section: string;
 }
 
-/* ── Data ── */
+/* â”€â”€ Data â”€â”€ */
 const USERS = [
   { name: 'Yug Pratap', avatar: 'https://i.pravatar.cc/150?u=yug' },
   { name: 'Riya Sharma', avatar: 'https://i.pravatar.cc/150?u=riya' },
@@ -51,7 +52,7 @@ const SECTIONS = [
   { id: 'feature-requests', title: 'Feature Requests', icon: Star, color: '#10b981' },
 ];
 
-/* ── Helpers ── */
+/* â”€â”€ Helpers â”€â”€ */
 const TypeIcon = ({ type }: { type: string }) => {
   switch (type) {
     case 'bug': return <Bug size={14} className="bl-type bug" />;
@@ -70,9 +71,41 @@ const PriorityIcon = ({ priority }: { priority: string }) => {
   }
 };
 
-/* ── Component ── */
+
+/* â”€â”€ Component â”€â”€ */
 export const Backlog = () => {
-  const [items, setItems] = useState<BacklogItem[]>(INITIAL_ITEMS);
+  const [items, setItems] = useState<BacklogItem[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await taskService.getTasks();
+        const mapped = (Array.isArray(data) ? data : []).map((t: any) => {
+          let section = 'product';
+          if (t.id % 4 === 0) section = 'bugs';
+          else if (t.id % 3 === 0) section = 'tech-debt';
+          else if (t.id % 2 === 0) section = 'feature-requests';
+
+          return {
+            id: t.id,
+            key: `ATL-${t.id}`,
+            title: t.title,
+            type: 'task',
+            priority: 'medium',
+            category: '',
+            categoryColor: '#8b5cf6',
+            assignee: null,
+            points: null,
+            section
+          };
+        });
+        setItems(mapped);
+      } catch (err) {
+        console.error("Failed to load backlog", err);
+      }
+    };
+    loadData();
+  }, []);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
     Object.fromEntries(SECTIONS.map(s => [s.id, true]))
   );
@@ -184,7 +217,7 @@ export const Backlog = () => {
                         <div className="bl-th bl-col-key">Key</div>
                         <div className="bl-th bl-col-summary">Summary</div>
                         <div className="bl-th bl-col-category">Category</div>
-                        <div className="bl-th bl-col-p">P ↓</div>
+                        <div className="bl-th bl-col-p">P â†“</div>
                         <div className="bl-th bl-col-assignee">Assignee</div>
                         <div className="bl-th bl-col-points"></div>
                         <div className="bl-th bl-col-actions"></div>
@@ -204,13 +237,13 @@ export const Backlog = () => {
                               <span className="bl-cat-pill" style={{ color: item.categoryColor, background: `${item.categoryColor}15`, border: `1px solid ${item.categoryColor}30` }}>
                                 {item.category}
                               </span>
-                            ) : <span className="bl-dash">—</span>}
+                            ) : <span className="bl-dash">â€”</span>}
                           </div>
                           <div className="bl-td bl-col-p"><PriorityIcon priority={item.priority} /></div>
                           <div className="bl-td bl-col-assignee">
                             {item.assignee ? (
                               <img src={item.assignee.avatar} alt={item.assignee.name} className="bl-assignee-avatar" />
-                            ) : <span className="bl-dash">—</span>}
+                            ) : <span className="bl-dash">â€”</span>}
                           </div>
                           <div className="bl-td bl-col-points">
                             {item.points != null ? <span className="bl-points-circle">{item.points}</span> : <span className="bl-dash">-</span>}
@@ -232,7 +265,7 @@ export const Backlog = () => {
         })}
       </div>
 
-      {/* ── Create Modal ── */}
+      {/* â”€â”€ Create Modal â”€â”€ */}
       {showModal && (
         <div className="bl-modal-overlay" onClick={() => setShowModal(false)}>
           <div className="bl-modal" onClick={e => e.stopPropagation()}>
@@ -282,3 +315,4 @@ export const Backlog = () => {
     </div>
   );
 };
+

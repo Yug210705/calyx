@@ -75,9 +75,9 @@ export const Dashboard = () => {
           taskService.getTasks()
         ]);
         if (dashData?.metrics) setMetrics(dashData.metrics);
-        if (projData) setProjects(projData.slice(0, 5));
-        if (actData) setActivities(actData.slice(0, 5));
-        if (taskData) setTasks(taskData);
+        if (Array.isArray(projData)) setProjects(projData.slice(0, 5));
+        if (Array.isArray(actData)) setActivities(actData.slice(0, 5));
+        if (Array.isArray(taskData)) setTasks(taskData);
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
       }

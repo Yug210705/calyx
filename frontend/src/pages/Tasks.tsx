@@ -1,4 +1,4 @@
-﻿import { taskService, projectService } from '../services/api';
+import { taskService, projectService } from '../services/api';
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Plus, MoreHorizontal, Filter, ChevronDown, X, 
@@ -115,13 +115,12 @@ export const Tasks = () => {
     const loadData = async () => {
       try {
         const data = await taskService.getTasks();
-        // Map backend task format to frontend format where necessary
-        const mapped = data.map((t: any) => ({
+        const mapped = (Array.isArray(data) ? data : []).map((t: any) => ({
           ...t,
           key: `ATL-${t.id}`,
-          priority: 'medium', // stub
-          type: 'task', // stub
-          assignee: null, // stub
+          priority: 'medium',
+          type: 'task',
+          assignee: null,
           comments: 0,
           attachments: 0,
           bookmarked: false,

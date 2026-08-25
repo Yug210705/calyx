@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+﻿import { taskService } from '../services/api';
+import React, { useState, useEffect } from 'react';
 import {
   MoreHorizontal,
   Plus,
@@ -64,9 +65,32 @@ const columns = [
   { id: 'done', title: 'Done' }
 ];
 
+
 export const Sprints = () => {
   const [view, setView] = useState<'board' | 'list'>('board');
-  const [tasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const data = await taskService.getTasks();
+        const mapped = (Array.isArray(data) ? data : []).map((t: any) => ({
+          id: `TASK-${t.id}`,
+          title: t.title,
+          type: 'story',
+          priority: 'medium',
+          status: t.status === 'Todo' ? 'todo' : t.status === 'In Progress' ? 'in-progress' : t.status === 'Done' ? 'done' : 'review',
+          assignee: `https://i.pravatar.cc/150?u=${t.id}`,
+          points: 3,
+          blocked: false
+        }));
+        setTasks(mapped);
+      } catch(e) {
+        console.error(e);
+      }
+    };
+    loadTasks();
+  }, []);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -290,3 +314,4 @@ export const Sprints = () => {
     </div>
   );
 };
+
