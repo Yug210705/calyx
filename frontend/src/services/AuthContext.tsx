@@ -42,11 +42,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // For now, if we have a token, we set a basic session.
       setSession({ access_token: token });
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        let base64 = token.split('.')[1];
+        base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) {
+          base64 += '=';
+        }
+        const payload = JSON.parse(atob(base64));
         setUser({ id: payload.sub, email: payload.email || 'user@example.com' });
       } catch (e) {
-        // invalid token
+        console.error("Failed to decode token", e);
         removeAuthToken();
+        setSession(null);
       }
     }
     setIsLoading(false);

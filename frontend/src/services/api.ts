@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+﻿const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
 
 export const getAuthToken = () => localStorage.getItem('atlas_token');
 export const setAuthToken = (token: string) => localStorage.setItem('atlas_token', token);
@@ -128,5 +128,7 @@ export const roleService = {
 
 export const userService = {
   getUsers: () => api.get('/users/'),
+  getMe: () => api.get('/users/me'),
 };
 export const analyticsService = { getDashboard: () => api.get('/analytics/dashboard') };
+
