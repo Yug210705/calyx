@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { Search, Plus, MoreHorizontal, Shield, User, Clock, CheckCircle2, ChevronDown } from 'lucide-react';
+import {
+  Search, Plus, MoreHorizontal, X, UserPlus,
+  Shield, User, Eye, Trash2, Edit3, Mail,
+  Check, ChevronDown, Filter
+} from 'lucide-react';
 import './Members.css';
 
+/* ── Types ── */
 interface Member {
-  id: string;
+  id: number;
   name: string;
   email: string;
   avatar: string;
@@ -13,169 +18,237 @@ interface Member {
   lastActive: string;
 }
 
-const mockMembers: Member[] = [
-  {
-    id: 'usr_1',
-    name: 'Eleanor Shellstrop',
-    email: 'eleanor@atlas.inc',
-    avatar: 'https://i.pravatar.cc/150?u=eleanor',
-    role: 'Admin',
-    teams: ['Engineering', 'Product'],
-    status: 'Active',
-    lastActive: 'Just now',
-  },
-  {
-    id: 'usr_2',
-    name: 'Chidi Anagonye',
-    email: 'chidi@atlas.inc',
-    avatar: 'https://i.pravatar.cc/150?u=chidi',
-    role: 'Member',
-    teams: ['Design'],
-    status: 'Active',
-    lastActive: '2 hours ago',
-  },
-  {
-    id: 'usr_3',
-    name: 'Tahani Al-Jamil',
-    email: 'tahani@atlas.inc',
-    avatar: 'https://i.pravatar.cc/150?u=tahani',
-    role: 'Member',
-    teams: ['Marketing', 'Sales'],
-    status: 'Active',
-    lastActive: '1 day ago',
-  },
-  {
-    id: 'usr_4',
-    name: 'Jason Mendoza',
-    email: 'jason@atlas.inc',
-    avatar: 'https://i.pravatar.cc/150?u=jason',
-    role: 'Guest',
-    teams: ['Contractors'],
-    status: 'Invited',
-    lastActive: 'Never',
-  },
-  {
-    id: 'usr_5',
-    name: 'Michael',
-    email: 'michael@atlas.inc',
-    avatar: 'https://i.pravatar.cc/150?u=michael',
-    role: 'Admin',
-    teams: ['Leadership'],
-    status: 'Active',
-    lastActive: '5 mins ago',
-  },
-  {
-    id: 'usr_6',
-    name: 'Janet',
-    email: 'janet@atlas.inc',
-    avatar: 'https://i.pravatar.cc/150?u=janet',
-    role: 'Admin',
-    teams: ['Engineering', 'Ops', 'Support'],
-    status: 'Active',
-    lastActive: 'Just now',
-  }
+const INITIAL: Member[] = [
+  { id: 1, name: 'Eleanor Shellstrop', email: 'eleanor@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=eleanor', role: 'Admin', teams: ['Engineering', 'Product'], status: 'Active', lastActive: 'Just now' },
+  { id: 2, name: 'Chidi Anagonye', email: 'chidi@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=chidi', role: 'Member', teams: ['Design'], status: 'Active', lastActive: '2 hours ago' },
+  { id: 3, name: 'Tahani Al-Jamil', email: 'tahani@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=tahani', role: 'Member', teams: ['Marketing', 'Sales'], status: 'Active', lastActive: '1 day ago' },
+  { id: 4, name: 'Jason Mendoza', email: 'jason@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=jason', role: 'Guest', teams: ['Contractors'], status: 'Invited', lastActive: 'Never' },
+  { id: 5, name: 'Michael', email: 'michael@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=michael', role: 'Admin', teams: ['Leadership'], status: 'Active', lastActive: '5 mins ago' },
+  { id: 6, name: 'Janet', email: 'janet@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=janet', role: 'Admin', teams: ['Engineering', 'Ops'], status: 'Active', lastActive: 'Just now' },
+  { id: 7, name: 'Simone Garnett', email: 'simone@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=simone', role: 'Member', teams: ['Design', 'Frontend'], status: 'Active', lastActive: '3 hours ago' },
+  { id: 8, name: 'Derek Hofstetler', email: 'derek@atlas.inc', avatar: 'https://i.pravatar.cc/150?u=derek', role: 'Guest', teams: ['QA'], status: 'Invited', lastActive: 'Never' },
 ];
 
-export const Members = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+/* ── Helpers ── */
+const RoleBadge = ({ role }: { role: Member['role'] }) => {
+  const cls = role === 'Admin' ? 'mb-role-admin' : role === 'Guest' ? 'mb-role-guest' : 'mb-role-member';
+  const Icon = role === 'Admin' ? Shield : role === 'Guest' ? Eye : User;
+  return <span className={`mb-role-badge ${cls}`}><Icon size={12} /> {role}</span>;
+};
 
-  const filteredMembers = mockMembers.filter(member => 
-    member.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    member.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+/* ── Toast ── */
+interface Toast { id: number; text: string; }
+const ToastBar = ({ toasts }: { toasts: Toast[] }) => (
+  <div className="mb-toast-wrap">{toasts.map(t => <div key={t.id} className="mb-toast"><Check size={14} />{t.text}</div>)}</div>
+);
+
+/* ── Main ── */
+export const Members = () => {
+  const [members, setMembers] = useState<Member[]>(INITIAL);
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [showInvite, setShowInvite] = useState(false);
+  const [menuId, setMenuId] = useState<number | null>(null);
+  const [editMember, setEditMember] = useState<Member | null>(null);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [inviteForm, setInviteForm] = useState({ name: '', email: '', role: 'Member' as Member['role'], team: '' });
+
+  const toast = (text: string) => {
+    const id = Date.now();
+    setToasts(p => [...p, { id, text }]);
+    setTimeout(() => setToasts(p => p.filter(t => t.id !== id)), 3000);
+  };
+
+  const filtered = members.filter(m => {
+    if (roleFilter !== 'all' && m.role !== roleFilter) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q) || m.teams.some(t => t.toLowerCase().includes(q));
+    }
+    return true;
+  });
+
+  const handleInvite = () => {
+    if (!inviteForm.name.trim() || !inviteForm.email.trim()) return;
+    const newMember: Member = {
+      id: Date.now(), name: inviteForm.name, email: inviteForm.email,
+      avatar: `https://i.pravatar.cc/150?u=${inviteForm.email}`,
+      role: inviteForm.role, teams: inviteForm.team ? [inviteForm.team] : [],
+      status: 'Invited', lastActive: 'Never',
+    };
+    setMembers(p => [...p, newMember]);
+    setShowInvite(false);
+    setInviteForm({ name: '', email: '', role: 'Member', team: '' });
+    toast(`Invitation sent to ${inviteForm.email}`);
+  };
+
+  const changeRole = (id: number, role: Member['role']) => {
+    setMembers(p => p.map(m => m.id === id ? { ...m, role } : m));
+    setMenuId(null);
+    toast(`Role updated to ${role}`);
+  };
+
+  const removeMember = (id: number) => {
+    const m = members.find(x => x.id === id);
+    setMembers(p => p.filter(x => x.id !== id));
+    setMenuId(null);
+    toast(`${m?.name} has been removed`);
+  };
+
+  const resendInvite = (id: number) => {
+    const m = members.find(x => x.id === id);
+    setMenuId(null);
+    toast(`Invitation resent to ${m?.email}`);
+  };
+
+  const activateMember = (id: number) => {
+    setMembers(p => p.map(m => m.id === id ? { ...m, status: 'Active', lastActive: 'Just now' } : m));
+    setMenuId(null);
+    toast('Member activated');
+  };
+
+  const stats = {
+    total: members.length,
+    admins: members.filter(m => m.role === 'Admin').length,
+    active: members.filter(m => m.status === 'Active').length,
+    invited: members.filter(m => m.status === 'Invited').length,
+  };
 
   return (
-    <div className="members-container">
-      <div className="members-header">
-        <div className="members-header-title">
-          <h1>Members</h1>
-          <p>Manage your organization's users and their roles.</p>
+    <div className="mb-page custom-scrollbar" onClick={() => setMenuId(null)}>
+      <ToastBar toasts={toasts} />
+
+      {/* Header */}
+      <div className="mb-header">
+        <div className="mb-header-left">
+          <h1 className="mb-title">Members</h1>
+          <p className="mb-subtitle">Manage your organization's users and their roles.</p>
         </div>
-        <div className="members-header-actions">
-          <div className="members-search-wrapper">
-            <Search className="search-icon" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search members..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="members-search-input"
-            />
+        <div className="mb-header-right">
+          <div className="mb-search">
+            <Search size={15} />
+            <input placeholder="Search members..." value={search} onChange={e => setSearch(e.target.value)} />
+            {search && <button className="mb-search-x" onClick={() => setSearch('')}><X size={13} /></button>}
           </div>
-          <button className="invite-btn">
-            <Plus size={16} />
-            Invite Members
+          <button className="mb-invite-btn" onClick={() => setShowInvite(true)}>
+            <Plus size={15} /> Invite Members
           </button>
         </div>
       </div>
 
-      <div className="members-table-container">
-        <table className="members-table">
+      {/* Stats */}
+      <div className="mb-stats">
+        <div className="mb-stat"><span className="mb-stat-val">{stats.total}</span><span className="mb-stat-lbl">Total</span></div>
+        <div className="mb-stat"><span className="mb-stat-val">{stats.admins}</span><span className="mb-stat-lbl">Admins</span></div>
+        <div className="mb-stat"><span className="mb-stat-val">{stats.active}</span><span className="mb-stat-lbl">Active</span></div>
+        <div className="mb-stat"><span className="mb-stat-val">{stats.invited}</span><span className="mb-stat-lbl">Invited</span></div>
+      </div>
+
+      {/* Filter */}
+      <div className="mb-filter-bar">
+        <div className="mb-filter-tabs">
+          {['all', 'Admin', 'Member', 'Guest'].map(r => (
+            <button key={r} className={`mb-ftab ${roleFilter === r ? 'active' : ''}`} onClick={() => setRoleFilter(r)}>
+              {r === 'all' ? 'All Roles' : r}
+            </button>
+          ))}
+        </div>
+        <span className="mb-result-count">{filtered.length} {filtered.length === 1 ? 'member' : 'members'}</span>
+      </div>
+
+      {/* Table */}
+      <div className="mb-table-wrap">
+        <table className="mb-table">
           <thead>
             <tr>
-              <th>User</th>
-              <th>Role</th>
-              <th>Teams</th>
-              <th>Status</th>
-              <th>Last Active</th>
-              <th className="actions-cell"></th>
+              <th className="mb-th-user">USER</th>
+              <th className="mb-th-role">ROLE</th>
+              <th className="mb-th-teams">TEAMS</th>
+              <th className="mb-th-status">STATUS</th>
+              <th className="mb-th-last">LAST ACTIVE</th>
+              <th className="mb-th-actions"></th>
             </tr>
           </thead>
           <tbody>
-            {filteredMembers.map((member) => (
-              <tr key={member.id} className="member-row">
-                <td>
-                  <div className="user-cell">
-                    <img src={member.avatar} alt={member.name} className="user-avatar" />
-                    <div className="user-details">
-                      <span className="user-name">{member.name}</span>
-                      <span className="user-email">{member.email}</span>
-                    </div>
+            {filtered.map(m => (
+              <tr key={m.id} className="mb-row">
+                <td className="mb-td-user">
+                  <img src={m.avatar} alt="" className="mb-avatar" />
+                  <div className="mb-user-info">
+                    <span className="mb-user-name">{m.name}</span>
+                    <span className="mb-user-email">{m.email}</span>
                   </div>
                 </td>
-                <td>
-                  <div className={`role-badge role-${member.role.toLowerCase()}`}>
-                    {member.role === 'Admin' && <Shield size={14} />}
-                    {member.role === 'Member' && <User size={14} />}
-                    {member.role === 'Guest' && <Clock size={14} />}
-                    {member.role}
+                <td className="mb-td-role"><RoleBadge role={m.role} /></td>
+                <td className="mb-td-teams">
+                  <div className="mb-team-pills">
+                    {m.teams.slice(0, 2).map(t => <span key={t} className="mb-team-pill">{t}</span>)}
+                    {m.teams.length > 2 && <span className="mb-team-more">+{m.teams.length - 2}</span>}
                   </div>
                 </td>
-                <td>
-                  <div className="teams-cell">
-                    {member.teams.slice(0, 2).map(team => (
-                      <span key={team} className="team-pill">{team}</span>
-                    ))}
-                    {member.teams.length > 2 && (
-                      <span className="team-pill team-more">+{member.teams.length - 2}</span>
+                <td className="mb-td-status">
+                  <span className={`mb-status ${m.status === 'Active' ? 'active' : 'invited'}`}>
+                    <span className="mb-status-dot" /> {m.status}
+                  </span>
+                </td>
+                <td className="mb-td-last">{m.lastActive}</td>
+                <td className="mb-td-actions">
+                  <div className="mb-menu-wrap" onClick={e => e.stopPropagation()}>
+                    <button className="mb-menu-btn" onClick={() => setMenuId(menuId === m.id ? null : m.id)}>
+                      <MoreHorizontal size={16} />
+                    </button>
+                    {menuId === m.id && (
+                      <div className="mb-dropdown">
+                        <button onClick={() => changeRole(m.id, 'Admin')}><Shield size={14} /> Make Admin</button>
+                        <button onClick={() => changeRole(m.id, 'Member')}><User size={14} /> Make Member</button>
+                        <button onClick={() => changeRole(m.id, 'Guest')}><Eye size={14} /> Make Guest</button>
+                        <div className="mb-drop-sep" />
+                        {m.status === 'Invited' && <button onClick={() => resendInvite(m.id)}><Mail size={14} /> Resend Invite</button>}
+                        {m.status === 'Invited' && <button onClick={() => activateMember(m.id)}><Check size={14} /> Activate</button>}
+                        <button className="mb-drop-danger" onClick={() => removeMember(m.id)}><Trash2 size={14} /> Remove</button>
+                      </div>
                     )}
                   </div>
-                </td>
-                <td>
-                  <div className={`status-indicator status-${member.status.toLowerCase()}`}>
-                    {member.status === 'Active' ? <CheckCircle2 size={14} /> : <div className="dot"></div>}
-                    {member.status}
-                  </div>
-                </td>
-                <td>
-                  <span className="last-active-text">{member.lastActive}</span>
-                </td>
-                <td className="actions-cell">
-                  <button className="action-btn">
-                    <MoreHorizontal size={18} />
-                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        
-        {filteredMembers.length === 0 && (
-          <div className="empty-state">
-            <p>No members found matching "{searchTerm}"</p>
-          </div>
-        )}
+        {filtered.length === 0 && <div className="mb-empty">No members match your search.</div>}
       </div>
+
+      {/* Invite Modal */}
+      {showInvite && (
+        <div className="mb-overlay" onClick={() => setShowInvite(false)}>
+          <div className="mb-modal" onClick={e => e.stopPropagation()}>
+            <div className="mb-modal-header">
+              <h2><UserPlus size={20} /> Invite Members</h2>
+              <button className="mb-modal-close" onClick={() => setShowInvite(false)}><X size={20} /></button>
+            </div>
+            <div className="mb-modal-body">
+              <div className="mb-modal-row">
+                <div className="mb-field"><label>Full Name <span className="req">*</span></label><input placeholder="e.g. Sarah Jenkins" value={inviteForm.name} onChange={e => setInviteForm({ ...inviteForm, name: e.target.value })} autoFocus /></div>
+                <div className="mb-field"><label>Email <span className="req">*</span></label><input placeholder="e.g. sarah@company.com" value={inviteForm.email} onChange={e => setInviteForm({ ...inviteForm, email: e.target.value })} /></div>
+              </div>
+              <div className="mb-modal-row">
+                <div className="mb-field">
+                  <label>Role</label>
+                  <select value={inviteForm.role} onChange={e => setInviteForm({ ...inviteForm, role: e.target.value as Member['role'] })}>
+                    <option value="Admin">Admin</option><option value="Member">Member</option><option value="Guest">Guest</option>
+                  </select>
+                </div>
+                <div className="mb-field"><label>Team</label><input placeholder="e.g. Engineering" value={inviteForm.team} onChange={e => setInviteForm({ ...inviteForm, team: e.target.value })} /></div>
+              </div>
+            </div>
+            <div className="mb-modal-footer">
+              <button className="mb-modal-cancel" onClick={() => setShowInvite(false)}>Cancel</button>
+              <button className="mb-modal-send" disabled={!inviteForm.name.trim() || !inviteForm.email.trim()} onClick={handleInvite}>
+                <Send size={14} /> Send Invitation
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
