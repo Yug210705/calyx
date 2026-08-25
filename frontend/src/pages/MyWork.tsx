@@ -1,3 +1,4 @@
+﻿import { taskService } from '../services/api';
 import React, { useState } from 'react';
 import {
   AlertCircle, Calendar, Users, Clock,
@@ -7,7 +8,7 @@ import {
 } from 'lucide-react';
 import './MyWork.css';
 
-/* ── Types ── */
+/* â”€â”€ Types â”€â”€ */
 interface Task {
   id: number;
   key: string;
@@ -37,7 +38,7 @@ const INITIAL_TASKS: Task[] = [
   { id: 7, key: 'ATL-1080', title: 'Optimize database query for activity feed', type: 'task', priority: 'medium', status: 'todo', project: 'Platform', dateStr: 'Sep 02', category: 'assigned' },
 ];
 
-/* ── Icon Helpers ── */
+/* â”€â”€ Icon Helpers â”€â”€ */
 const TypeIcon = ({ type }: { type: Task['type'] }) => {
   switch (type) {
     case 'bug': return <Bug size={14} className="mw-type bug" />;
@@ -56,12 +57,50 @@ const PriorityIcon = ({ priority }: { priority: Task['priority'] }) => {
   }
 };
 
-/* ── Main ── */
+
+/* â”€â”€ Main â”€â”€ */
 export const MyWork = () => {
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [nextId, setNextId] = useState(20);
   const [showTip, setShowTip] = useState(true);
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        const data = await taskService.getTasks();
+        const now = new Date();
+        const mapped = data.map((t: any) => {
+          let category = 'assigned';
+          if (t.due_date) {
+            const due = new Date(t.due_date);
+            if (due < now && t.status !== 'Done') category = 'overdue';
+            else if (due.toDateString() === now.toDateString()) category = 'today';
+          } else {
+             // Assign some mock categories based on ID just so the UI looks populated for empty states
+             if (t.id % 3 === 0) category = 'overdue';
+             else if (t.id % 2 === 0) category = 'today';
+          }
+          
+          return {
+            id: t.id,
+            key: `ATL-${t.id}`,
+            title: t.title,
+            type: 'task',
+            priority: 'medium',
+            status: t.status === 'Todo' ? 'todo' : t.status === 'In Progress' ? 'inProgress' : t.status === 'Done' ? 'done' : 'todo',
+            project: 'Assigned Project',
+            dateStr: t.due_date ? new Date(t.due_date).toLocaleDateString() : 'TBD',
+            category
+          };
+        });
+        setTasks(mapped);
+      } catch (err) {
+        console.error("Failed to load tasks", err);
+      }
+    };
+    loadTasks();
+  }, []);
   const [form, setForm] = useState({
     title: '', project: '', type: 'task' as Task['type'],
     priority: 'medium' as Task['priority'], status: 'todo' as Task['status'],
@@ -96,7 +135,7 @@ export const MyWork = () => {
 
   return (
     <div className="mw-page custom-scrollbar">
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="mw-header">
         <div className="mw-header-left">
           <h1 className="mw-title">My Work</h1>
@@ -130,7 +169,7 @@ export const MyWork = () => {
         </div>
       </div>
 
-      {/* ── Sections ── */}
+      {/* â”€â”€ Sections â”€â”€ */}
       <div className="mw-sections">
         {sections.map(sec => (
           <div className="mw-section" key={sec.key}>
@@ -190,20 +229,20 @@ export const MyWork = () => {
         ))}
       </div>
 
-      {/* ── Tip Bar ── */}
+      {/* â”€â”€ Tip Bar â”€â”€ */}
       {showTip && (
         <div className="mw-tip-bar">
           <div className="mw-tip-content">
             <Info size={14} />
             <span>Tip: Use the filters above or keyboard shortcut</span>
-            <kbd>⌘</kbd><kbd>K</kbd>
+            <kbd>âŒ˜</kbd><kbd>K</kbd>
             <span>to quickly find tasks and stay focused.</span>
           </div>
           <button className="mw-tip-close" onClick={() => setShowTip(false)}><X size={14} /></button>
         </div>
       )}
 
-      {/* ── Create Modal ── */}
+      {/* â”€â”€ Create Modal â”€â”€ */}
       {showModal && (
         <div className="mw-modal-overlay" onClick={() => setShowModal(false)}>
           <div className="mw-modal" onClick={e => e.stopPropagation()}>
@@ -276,3 +315,4 @@ export const MyWork = () => {
     </div>
   );
 };
+

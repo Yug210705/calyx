@@ -46,7 +46,7 @@ const spark4 = [{v:4},{v:6},{v:7},{v:8},{v:10},{v:9},{v:12},{v:11},{v:14},{v:16}
 
 /* ═══════ COMPONENT ═══════ */
 
-import { analyticsService, projectService, activityService } from '../services/api';
+import { analyticsService, projectService, activityService, taskService } from '../services/api';
 import { useAuth } from '../services/AuthContext';
 
 export const Dashboard = () => {
@@ -63,18 +63,21 @@ export const Dashboard = () => {
   
   const [projects, setProjects] = useState([]);
   const [activities, setActivities] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [dashData, projData, actData] = await Promise.all([
+        const [dashData, projData, actData, taskData] = await Promise.all([
           analyticsService.getDashboard(),
           projectService.getProjects(),
-          activityService.getActivities()
+          activityService.getActivities(),
+          taskService.getTasks()
         ]);
         if (dashData?.metrics) setMetrics(dashData.metrics);
         if (projData) setProjects(projData.slice(0, 5));
         if (actData) setActivities(actData.slice(0, 5));
+        if (taskData) setTasks(taskData);
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
       }
@@ -132,32 +135,50 @@ export const Dashboard = () => {
               <h3 className="dash-card-title">Tasks Overview</h3>
               <a href="#" className="dash-card-link">View all tasks →</a>
             </div>
-            <div className="donut-layout">
-              <div className="donut-chart-wrapper">
-                <ResponsiveContainer width="100%" height={170}>
-                  <PieChart>
-                    <Pie data={pieData} innerRadius={55} outerRadius={78} paddingAngle={2} dataKey="value" stroke="none" startAngle={90} endAngle={-270}>
-                      {pieData.map((e, i) => <Cell key={i} fill={e.color} />)}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="donut-center-text">
-                  <span className="donut-center-val">128</span>
-                  <span className="donut-center-label">Total</span>
-                </div>
-              </div>
-              <div className="donut-legend">
-                {pieData.map(d => (
-                  <div className="donut-legend-item" key={d.name}>
-                    <div className="donut-legend-left">
-                      <span className="donut-legend-dot" style={{background:d.color}} />
-                      <span className="donut-legend-name">{d.name}</span>
+            {(() => {
+              const total = tasks.length || 1; // avoid division by zero
+              const todo = tasks.filter((t: any) => t.status === 'Todo').length;
+              const inProgress = tasks.filter((t: any) => t.status === 'In Progress').length;
+              const review = tasks.filter((t: any) => t.status === 'Review').length;
+              const done = tasks.filter((t: any) => t.status === 'Done').length;
+
+              const dynamicPieData = [
+                { name: 'To Do',        value: todo, pct: Math.round((todo / total) * 100), color: '#3b82f6' },
+                { name: 'In Progress',  value: inProgress, pct: Math.round((inProgress / total) * 100), color: '#8b5cf6' },
+                { name: 'Review',       value: review, pct: Math.round((review / total) * 100), color: '#f59e0b' },
+                { name: 'Done',         value: done, pct: Math.round((done / total) * 100), color: '#10b981' },
+              ].filter(d => tasks.length > 0 || d.name === 'To Do'); // Keep at least one slice if empty for rendering
+              if (tasks.length === 0) dynamicPieData[0].value = 1;
+
+              return (
+                <div className="donut-layout">
+                  <div className="donut-chart-wrapper">
+                    <ResponsiveContainer width="100%" height={170}>
+                      <PieChart>
+                        <Pie data={dynamicPieData} innerRadius={55} outerRadius={78} paddingAngle={2} dataKey="value" stroke="none" startAngle={90} endAngle={-270}>
+                          {dynamicPieData.map((e, i) => <Cell key={i} fill={tasks.length === 0 ? '#e2e8f0' : e.color} />)}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="donut-center-text">
+                      <span className="donut-center-val">{tasks.length}</span>
+                      <span className="donut-center-label">Total</span>
                     </div>
-                    <span className="donut-legend-val">{d.value} <span className="donut-legend-pct">({d.pct}%)</span></span>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="donut-legend">
+                    {dynamicPieData.map(d => (
+                      <div className="donut-legend-item" key={d.name}>
+                        <div className="donut-legend-left">
+                          <span className="donut-legend-dot" style={{background: tasks.length === 0 ? '#e2e8f0' : d.color}} />
+                          <span className="donut-legend-name">{d.name}</span>
+                        </div>
+                        <span className="donut-legend-val">{tasks.length === 0 ? 0 : d.value} <span className="donut-legend-pct">({tasks.length === 0 ? 0 : d.pct}%)</span></span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Projects Progress */}

@@ -1,3 +1,4 @@
+﻿import { projectService } from '../services/api';
 import React, { useState, useEffect } from 'react';
 import {
   Search, Plus, Filter, LayoutGrid, Calendar, Target,
@@ -7,7 +8,7 @@ import {
 } from 'lucide-react';
 import './Roadmap.css';
 
-/* ── Types ── */
+/* â”€â”€ Types â”€â”€ */
 interface Epic {
   id: string;
   title: string;
@@ -46,16 +47,51 @@ const INITIAL_EPICS: Epic[] = [
   { id: 'EP-13', title: 'SSO Integration (SAML)', team: 'Security', status: 'planning', startMonth: 8, endMonth: 11, progress: 5, assignees: ['https://i.pravatar.cc/150?u=p'], type: 'security', priority: 'high' },
 ];
 
+
 export const Roadmap = () => {
-  const [epics] = useState<Epic[]>(INITIAL_EPICS);
+  const [epics, setEpics] = useState<Epic[]>([]);
   const [search, setSearch] = useState('');
   const [view, setView] = useState<'Q1-Q2' | 'Q3-Q4' | 'Year'>('Year');
   const [hoveredEpic, setHoveredEpic] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // Trigger entrance animations
-    setTimeout(() => setLoaded(true), 100);
+    const loadProjects = async () => {
+      try {
+        const data = await projectService.getProjects();
+        const currentMonth = new Date().getMonth() + 1;
+        const mapped: Epic[] = data.map((p: any) => {
+           const idStr = p.id.toString();
+           // pseudo-random generation based on id for visualization purposes
+           const teamIdx = p.id % TEAMS.length;
+           const sm = ((p.id * 3) % 8) + 1;
+           const em = Math.min(sm + ((p.id * 2) % 4) + 1, 12);
+           
+           let status: Epic['status'] = 'planning';
+           if (p.status === 'In Progress') status = 'in-progress';
+           if (p.status === 'Completed' || p.status === 'Done') status = 'completed';
+
+           return {
+             id: `EP-${p.id}`,
+             title: p.title,
+             team: TEAMS[teamIdx].id as any,
+             status,
+             startMonth: sm,
+             endMonth: em,
+             progress: p.progress || 0,
+             assignees: [`https://i.pravatar.cc/150?u=${p.id}`],
+             type: 'feature',
+             priority: 'medium'
+           };
+        });
+        setEpics(mapped);
+      } catch(e) {
+        console.error(e);
+      } finally {
+        setTimeout(() => setLoaded(true), 100);
+      }
+    };
+    loadProjects();
   }, []);
 
   const currentMonth = new Date().getMonth() + 1;
@@ -86,7 +122,7 @@ export const Roadmap = () => {
       <div className="rm-ambient-glow glow-1"></div>
       <div className="rm-ambient-glow glow-2"></div>
 
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="rm-header">
         <div className="rm-header-main">
           <div className="rm-title-section">
@@ -128,7 +164,7 @@ export const Roadmap = () => {
         </div>
       </div>
 
-      {/* ── Roadmap Board ── */}
+      {/* â”€â”€ Roadmap Board â”€â”€ */}
       <div className="rm-board-container">
         <div className="rm-board-scroll custom-scrollbar">
           <div className="rm-board" style={{ '--cols': getGridCols() } as React.CSSProperties}>
@@ -283,3 +319,4 @@ export const Roadmap = () => {
     </div>
   );
 };
+
