@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Search, Plus, MoreHorizontal, X, UserPlus,
   Shield, User, Eye, Trash2, Edit3, Mail,
-  Check, ChevronDown, Filter, MapPin, Calendar, Phone, Briefcase
+  Check, ChevronDown, Filter, MapPin, Calendar, Phone, Briefcase, Clock, Send
 } from 'lucide-react';
 import './Members.css';
 
