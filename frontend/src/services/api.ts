@@ -129,3 +129,4 @@ export const roleService = {
 export const userService = {
   getUsers: () => api.get('/users/'),
 };
+export const analyticsService = { getDashboard: () => api.get('/analytics/dashboard') };

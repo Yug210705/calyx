@@ -18,41 +18,6 @@ import { projectService } from '../services/api';
 import { ProjectGraphModal } from '../components/ProjectGraphModal';
 import './Projects.css';
 
-const overviewStats = [
-  {
-    title: 'Total Projects',
-    value: '24',
-    trend: '12% this month',
-    trendUp: true,
-    icon: Folder,
-    colorClass: 'purple'
-  },
-  {
-    title: 'In Progress',
-    value: '8',
-    trend: '2% this month',
-    trendUp: true,
-    icon: List,
-    colorClass: 'blue'
-  },
-  {
-    title: 'Completed',
-    value: '10',
-    trend: '20% this month',
-    trendUp: true,
-    icon: CheckCircle2,
-    colorClass: 'green'
-  },
-  {
-    title: 'On Hold',
-    value: '3',
-    trend: '5% this month',
-    trendUp: false,
-    icon: Clock,
-    colorClass: 'orange'
-  }
-];
-
 export const Projects = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -61,6 +26,41 @@ export const Projects = () => {
   useEffect(() => {
     loadProjects();
   }, []);
+
+  const overviewStats = [
+    {
+      title: 'Total Projects',
+      value: projects.length.toString(),
+      trend: 'this month',
+      trendUp: true,
+      icon: Folder,
+      colorClass: 'purple'
+    },
+    {
+      title: 'In Progress',
+      value: projects.filter(p => p.status === 'In Progress').length.toString(),
+      trend: 'this month',
+      trendUp: true,
+      icon: List,
+      colorClass: 'blue'
+    },
+    {
+      title: 'Completed',
+      value: projects.filter(p => p.status === 'Completed' || p.status === 'Done').length.toString(),
+      trend: 'this month',
+      trendUp: true,
+      icon: CheckCircle2,
+      colorClass: 'green'
+    },
+    {
+      title: 'Planning',
+      value: projects.filter(p => p.status === 'Planning' || p.status === 'Todo').length.toString(),
+      trend: 'this month',
+      trendUp: false,
+      icon: Clock,
+      colorClass: 'orange'
+    }
+  ];
 
   const loadProjects = async () => {
     try {
@@ -187,7 +187,7 @@ export const Projects = () => {
       </div>
 
       <div className="projects-footer">
-        <div className="footer-text">Showing 1 to 6 of 24 projects</div>
+        <div className="footer-text">Showing {projects.length} projects</div>
         <div className="pagination">
           <button className="page-btn"><ChevronLeft size={16} /></button>
           <button className="page-btn active">1</button>

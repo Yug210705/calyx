@@ -1,3 +1,4 @@
+﻿import { taskService, projectService } from '../services/api';
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Plus, MoreHorizontal, Filter, ChevronDown, X, 
@@ -8,7 +9,7 @@ import {
 } from 'lucide-react';
 import './Tasks.css';
 
-/* ── Types ── */
+/* â”€â”€ Types â”€â”€ */
 interface Comment {
   id: number;
   user: { name: string; avatar: string };
@@ -35,7 +36,7 @@ interface Task {
   commentList: Comment[];
 }
 
-/* ── Constants ── */
+/* â”€â”€ Constants â”€â”€ */
 const USERS = [
   { name: 'Yug Pratap', avatar: 'https://i.pravatar.cc/150?u=yug' },
   { name: 'Riya Sharma', avatar: 'https://i.pravatar.cc/150?u=riya' },
@@ -76,7 +77,7 @@ const INITIAL_TASKS: Task[] = [
   { id: 12, key: 'ATL-12', title: 'User roles & permissions', description: 'Implement RBAC with role hierarchy.', project: 'Internal Admin Panel', type: 'story', priority: 'high', status: 'done', assignee: USERS[4], storyPoints: 8, labels: ['Backend', 'Auth'], comments: 4, attachments: 0, created: '2024-05-06', bookmarked: false, commentList: [] },
 ];
 
-/* ── Helper Components ── */
+/* â”€â”€ Helper Components â”€â”€ */
 const TypeIcon = ({ type, size = 14 }: { type: string; size?: number }) => {
   switch (type) {
     case 'bug': return <Bug size={size} className="type-icon bug" />;
@@ -101,13 +102,39 @@ const emptyForm = () => ({
   assigneeIndex: 0, storyPoints: '', labels: '', status: 'todo' as Task['status'],
 });
 
-/* ── Main Component ── */
+
+/* â”€â”€ Main Component â”€â”€ */
 export const Tasks = () => {
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [activeView, setActiveView] = useState('board');
   const [nextId, setNextId] = useState(13);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await taskService.getTasks();
+        // Map backend task format to frontend format where necessary
+        const mapped = data.map((t: any) => ({
+          ...t,
+          key: `ATL-${t.id}`,
+          priority: 'medium', // stub
+          type: 'task', // stub
+          assignee: null, // stub
+          comments: 0,
+          attachments: 0,
+          bookmarked: false,
+          commentList: [],
+          status: t.status === 'Todo' ? 'todo' : t.status === 'In Progress' ? 'inProgress' : t.status === 'Done' ? 'done' : 'todo'
+        }));
+        setTasks(mapped);
+      } catch (err) {
+        console.error("Failed to load tasks", err);
+      }
+    };
+    loadData();
+  }, []);
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -122,7 +149,7 @@ export const Tasks = () => {
   const [nextCommentId, setNextCommentId] = useState(100);
   const commentInputRef = useRef<HTMLInputElement>(null);
 
-  /* ── Filtering Logic ── */
+  /* â”€â”€ Filtering Logic â”€â”€ */
   const filteredTasks = tasks.filter(t => {
     if (searchQuery && !t.title.toLowerCase().includes(searchQuery.toLowerCase()) && !t.key.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filterPriority !== 'all' && t.priority !== filterPriority) return false;
@@ -133,7 +160,7 @@ export const Tasks = () => {
 
   const activeFiltersCount = [filterPriority, filterType, filterProject].filter(f => f !== 'all').length;
 
-  /* ── Create ── */
+  /* â”€â”€ Create â”€â”€ */
   const openCreateForColumn = (status: Task['status']) => {
     setNewTask({ ...emptyForm(), status });
     setShowCreateModal(true);
@@ -157,7 +184,7 @@ export const Tasks = () => {
     setNewTask(emptyForm());
   };
 
-  /* ── Bookmark ── */
+  /* â”€â”€ Bookmark â”€â”€ */
   const toggleBookmark = (taskId: number) => {
     setTasks(tasks.map(t => t.id === taskId ? { ...t, bookmarked: !t.bookmarked } : t));
     if (selectedTask && selectedTask.id === taskId) {
@@ -165,7 +192,7 @@ export const Tasks = () => {
     }
   };
 
-  /* ── Comment ── */
+  /* â”€â”€ Comment â”€â”€ */
   const addComment = (taskId: number) => {
     if (!commentText.trim()) return;
     const newComment: Comment = {
@@ -182,7 +209,7 @@ export const Tasks = () => {
     setNextCommentId(nextCommentId + 1);
   };
 
-  /* ── Edit ── */
+  /* â”€â”€ Edit â”€â”€ */
   const openEdit = (task: Task) => {
     setEditingTask(task);
     setNewTask({
@@ -216,13 +243,13 @@ export const Tasks = () => {
     setNewTask(emptyForm());
   };
 
-  /* ── Delete ── */
+  /* â”€â”€ Delete â”€â”€ */
   const handleDelete = (taskId: number) => {
     setTasks(tasks.filter(t => t.id !== taskId));
     setSelectedTask(null);
   };
 
-  /* ── Drag & Drop ── */
+  /* â”€â”€ Drag & Drop â”€â”€ */
   const handleDragStart = (e: React.DragEvent, task: Task) => {
     setDraggedTask(task);
     e.dataTransfer.effectAllowed = 'move';
@@ -246,7 +273,7 @@ export const Tasks = () => {
     setDragOverColumn(null);
   };
 
-  /* ── Column menu actions ── */
+  /* â”€â”€ Column menu actions â”€â”€ */
   const clearColumn = (columnId: Task['status']) => {
     setTasks(tasks.filter(t => t.status !== columnId));
     setColumnMenuId(null);
@@ -256,7 +283,7 @@ export const Tasks = () => {
     setColumnMenuId(null);
   };
 
-  /* ── Reset Filters ── */
+  /* â”€â”€ Reset Filters â”€â”€ */
   const resetFilters = () => {
     setFilterPriority('all');
     setFilterType('all');
@@ -265,10 +292,10 @@ export const Tasks = () => {
     setShowFilterMenu(false);
   };
 
-  /* ═══════════════════════ RENDER ═══════════════════════ */
+  /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RENDER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
   return (
     <div className="tasks-page" onClick={() => { setColumnMenuId(null); setShowFilterMenu(false); }}>
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="tasks-welcome">
         <div className="tasks-header">
           <div className="tasks-header-left">
@@ -333,7 +360,7 @@ export const Tasks = () => {
         </div>
       </div>
 
-      {/* ═══════════════ BOARD VIEW ═══════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BOARD VIEW â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {activeView === 'board' && (
         <div className="board-container">
           {COLUMNS.map(column => {
@@ -411,7 +438,7 @@ export const Tasks = () => {
         </div>
       )}
 
-      {/* ═══════════════ LIST VIEW ═══════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LIST VIEW â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {activeView === 'list' && (
         <div className="list-container">
           <div className="list-table-header">
@@ -438,7 +465,7 @@ export const Tasks = () => {
               <div className="list-col-assignee">
                 {task.assignee && <><img src={task.assignee.avatar} alt="" className="list-avatar" /> {task.assignee.name}</>}
               </div>
-              <div className="list-col-sp">{task.storyPoints ?? '—'}</div>
+              <div className="list-col-sp">{task.storyPoints ?? 'â€”'}</div>
               <div className="list-col-actions">
                 <button className="list-action-btn" onClick={e => { e.stopPropagation(); openEdit(task); }}><Edit3 size={14} /></button>
                 <button className="list-action-btn danger" onClick={e => { e.stopPropagation(); handleDelete(task.id); }}><Trash2 size={14} /></button>
@@ -449,7 +476,7 @@ export const Tasks = () => {
         </div>
       )}
 
-      {/* ═══════════════ CREATE / EDIT MODAL ═══════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CREATE / EDIT MODAL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {showCreateModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-container" onClick={e => e.stopPropagation()}>
@@ -527,7 +554,7 @@ export const Tasks = () => {
         </div>
       )}
 
-      {/* ═══════════════ DETAIL SIDE PANEL ═══════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• DETAIL SIDE PANEL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {selectedTask && (
         <div className="detail-overlay" onClick={() => { setSelectedTask(null); setCommentText(''); }}>
           <div className="detail-panel" onClick={e => e.stopPropagation()}>
@@ -601,7 +628,7 @@ export const Tasks = () => {
                   </div>
                   <div className="detail-grid-item">
                     <span className="grid-label"><Bookmark size={14} /> Story Points</span>
-                    <span className="grid-value">{selectedTask.storyPoints ?? '—'}</span>
+                    <span className="grid-value">{selectedTask.storyPoints ?? 'â€”'}</span>
                   </div>
                   <div className="detail-grid-item">
                     <span className="grid-label"><Calendar size={14} /> Created</span>
@@ -686,3 +713,4 @@ export const Tasks = () => {
     </div>
   );
 };
+

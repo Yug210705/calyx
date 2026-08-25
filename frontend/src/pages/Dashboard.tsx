@@ -46,9 +46,41 @@ const spark4 = [{v:4},{v:6},{v:7},{v:8},{v:10},{v:9},{v:12},{v:11},{v:14},{v:16}
 
 /* ═══════ COMPONENT ═══════ */
 
+import { analyticsService, projectService, activityService } from '../services/api';
+import { useAuth } from '../services/AuthContext';
+
 export const Dashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  
+  const [metrics, setMetrics] = useState({
+    total_projects: 0,
+    total_tasks: 0,
+    completed_tasks: 0,
+    team_members: 0
+  });
+  
+  const [projects, setProjects] = useState([]);
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [dashData, projData, actData] = await Promise.all([
+          analyticsService.getDashboard(),
+          projectService.getProjects(),
+          activityService.getActivities()
+        ]);
+        if (dashData?.metrics) setMetrics(dashData.metrics);
+        if (projData) setProjects(projData.slice(0, 5));
+        if (actData) setActivities(actData.slice(0, 5));
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      }
+    };
+    loadData();
+  }, []);
 
   useEffect(() => {
     const h = (e: MouseEvent) => {
@@ -65,14 +97,14 @@ export const Dashboard = () => {
         {/* ── HEADER ── */}
         <div className="dashboard-header">
           <div className="dashboard-header-left">
-            <h1 className="welcome-title">Welcome back, Yug! 👋</h1>
+            <h1 className="welcome-title">Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋</h1>
             <p className="welcome-subtitle">Here's what's happening in your workspace today.</p>
           </div>
           <div className="dashboard-header-right">
             <div className="date-picker-wrapper" ref={dropdownRef}>
               <button className="date-picker-btn" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 <CalendarIcon size={15} />
-                <span>May 12 – May 18, 2024</span>
+                <span>This Week</span>
                 <ChevronDown size={14} className="chevron" />
               </button>
             </div>
@@ -85,10 +117,10 @@ export const Dashboard = () => {
 
         {/* ── ROW 1 — KPI CARDS ── */}
         <div className="kpi-grid">
-          <KpiCard label="Total Projects" value="24" trend="12%" color="#3b82f6" bgTint="#eff6ff" icon={<Folder size={20} />} data={spark1} />
-          <KpiCard label="Total Tasks" value="128" trend="8%" color="#10b981" bgTint="#f0fdf4" icon={<CheckSquareIcon />} data={spark2} />
-          <KpiCard label="Completed Tasks" value="72" trend="18%" color="#f59e0b" bgTint="#fffbeb" icon={<CheckCircle2 size={20} />} data={spark3} />
-          <KpiCard label="Team Members" value="18" trend="4%" color="#6366f1" bgTint="#eef2ff" icon={<Users size={20} />} data={spark4} />
+          <KpiCard label="Total Projects" value={metrics.total_projects.toString()} trend="0%" color="#3b82f6" bgTint="#eff6ff" icon={<Folder size={20} />} data={spark1} />
+          <KpiCard label="Total Tasks" value={metrics.total_tasks.toString()} trend="0%" color="#10b981" bgTint="#f0fdf4" icon={<CheckCircle2 size={20} />} data={spark2} />
+          <KpiCard label="Completed Tasks" value={metrics.completed_tasks.toString()} trend="0%" color="#f59e0b" bgTint="#fffbeb" icon={<CheckCircle2 size={20} />} data={spark3} />
+          <KpiCard label="Team Members" value={metrics.team_members.toString()} trend="0%" color="#6366f1" bgTint="#eef2ff" icon={<Users size={20} />} data={spark4} />
         </div>
 
         {/* ── ROW 2 — MIDDLE GRID ── */}
@@ -135,20 +167,16 @@ export const Dashboard = () => {
               <a href="#" className="dash-card-link">View all projects →</a>
             </div>
             <div className="projects-progress-list">
-              {([
-                {name:'Atlas Mobile App',  icon:Layout,   color:'#3b82f6', bg:'#eff6ff',  pct:75},
-                {name:'Website Redesign',  icon:Globe,    color:'#3b82f6', bg:'#eff6ff',  pct:45},
-                {name:'AI Dashboard',      icon:Settings, color:'#10b981', bg:'#f0fdf4',  pct:90},
-                {name:'Marketing Website', icon:Megaphone,color:'#f59e0b', bg:'#fffbeb',  pct:20},
-                {name:'Admin Panel',       icon:Shield,   color:'#6b7280', bg:'#f3f4f6',  pct:10},
-              ] as const).map(p => (
-                <div className="proj-prog-item" key={p.name}>
+              {projects.length === 0 ? (
+                <div style={{padding: '20px', textAlign: 'center', color: '#94a3b8', fontSize: '13px'}}>No projects found. Create one to get started!</div>
+              ) : projects.map((p: any) => (
+                <div className="proj-prog-item" key={p.id}>
                   <div className="proj-prog-info">
-                    <div className="proj-prog-icon" style={{color:p.color, background:p.bg}}><p.icon size={14}/></div>
-                    <span className="proj-prog-name">{p.name}</span>
+                    <div className="proj-prog-icon" style={{color: '#3b82f6', background: '#eff6ff'}}><Layout size={14}/></div>
+                    <span className="proj-prog-name">{p.title}</span>
                   </div>
-                  <div className="proj-prog-bar-wrapper"><div className="proj-prog-bar" style={{width:`${p.pct}%`, background:p.color}} /></div>
-                  <span className="proj-prog-val">{p.pct}%</span>
+                  <div className="proj-prog-bar-wrapper"><div className="proj-prog-bar" style={{width: `${p.progress || 0}%`, background: '#3b82f6'}} /></div>
+                  <span className="proj-prog-val">{p.progress || 0}%</span>
                 </div>
               ))}
             </div>
@@ -161,19 +189,14 @@ export const Dashboard = () => {
               <a href="#" className="dash-card-link">View all →</a>
             </div>
             <div className="activity-list">
-              {([
-                {who:'You',            verb:'updated the task',   what:'API Integration',         ago:'2m ago',  img:'https://i.pravatar.cc/150?u=yug'},
-                {who:'Riya Sharma',    verb:'commented on',       what:'Landing Page Design',     ago:'15m ago', img:'https://i.pravatar.cc/150?u=riya'},
-                {who:'Arjun Singh',    verb:'completed',          what:'Database Schema Design',  ago:'1h ago',  img:'https://i.pravatar.cc/150?u=arjun'},
-                {who:'Neha Verma',     verb:'created a new task', what:'User Research',           ago:'2h ago',  img:'https://i.pravatar.cc/150?u=neha'},
-              ]).map((a, i) => (
+              {activities.length === 0 ? (
+                <div style={{padding: '20px', textAlign: 'center', color: '#94a3b8', fontSize: '13px'}}>No recent activity.</div>
+              ) : activities.map((a: any, i) => (
                 <div className="activity-item" key={i}>
-                  <img src={a.img} className="activity-avatar" alt="" />
                   <div className="activity-text">
-                    <p>{a.who} {a.verb}</p>
-                    <p className="activity-target">{a.what}</p>
+                    <p>{a.description}</p>
                   </div>
-                  <div className="activity-meta"><span className="activity-time">{a.ago}</span></div>
+                  <div className="activity-meta"><span className="activity-time">Just now</span></div>
                 </div>
               ))}
             </div>
