@@ -36,26 +36,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      // Decode JWT roughly to get user data if needed, or rely on a /me endpoint
-      // For now, if we have a token, we set a basic session.
-      setSession({ access_token: token });
-      try {
-        let base64 = token.split('.')[1];
-        base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
-        while (base64.length % 4) {
-          base64 += '=';
+    const initAuth = async () => {
+      const token = getAuthToken();
+      if (token) {
+        setSession({ access_token: token });
+        try {
+          let base64 = token.split('.')[1];
+          base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
+          while (base64.length % 4) {
+            base64 += '=';
+          }
+          const payload = JSON.parse(atob(base64));
+          setUser({ id: payload.sub, email: payload.email || 'user@example.com' });
+          
+          // Hydrate full user from backend
+          try {
+            const { userService } = await import('./api');
+            const userData = await userService.getMe();
+            if (userData && userData.email) {
+              setUser(userData);
+            }
+          } catch (apiErr) {
+            console.error("Failed to fetch user profile", apiErr);
+          }
+        } catch (e) {
+          console.error("Failed to decode token", e);
+          removeAuthToken();
+          setSession(null);
         }
-        const payload = JSON.parse(atob(base64));
-        setUser({ id: payload.sub, email: payload.email || 'user@example.com' });
-      } catch (e) {
-        console.error("Failed to decode token", e);
-        removeAuthToken();
-        setSession(null);
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+    initAuth();
   }, []);
 
   const setDemoMode = (isDemo: boolean) => {
