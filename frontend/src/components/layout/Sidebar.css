@@ -35,9 +35,9 @@
 }
 
 .logo-img {
-  height: 24px;
+  height: 36px;
   width: auto;
-  max-width: 140px;
+  max-width: 180px;
   object-fit: contain;
 }
 
