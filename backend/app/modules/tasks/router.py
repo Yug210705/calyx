@@ -1,45 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
-from typing import List
-
 from app.db.session import get_db
-from app.modules.tasks.models import Task
-from app.modules.tasks.schemas import TaskCreate, TaskUpdate, TaskResponse
-from app.core.security import get_current_user
+from app.db.base_models import Task, Project, User
+from app.core.deps import get_current_user
 
-router = APIRouter(prefix="/tasks", tags=["Tasks"])
+router = APIRouter(prefix="/tasks", tags=["tasks"])
 
-@router.post("/", response_model=TaskResponse)
-async def create_task(task: TaskCreate, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    db_task = Task(**task.model_dump(), owner_id=current_user["sub"])
-    db.add(db_task)
-    await db.commit()
-    await db.refresh(db_task)
-    # Reload with relations
-    result = await db.execute(select(Task).options(selectinload(Task.assignee)).filter(Task.id == db_task.id))
-    return result.scalars().first()
-
-@router.get("/", response_model=List[TaskResponse])
-async def read_tasks(project_id: int = None, skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    query = select(Task).options(selectinload(Task.assignee)).filter(Task.owner_id == current_user["sub"])
+@router.get("/")
+async def get_tasks(project_id: int = None, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Simple tenant verification
+    query = select(Task).join(Project).where(Project.organization_id == current_user.organization_id)
     if project_id:
-        query = query.filter(Task.project_id == project_id)
-    result = await db.execute(query.offset(skip).limit(limit))
+        query = query.where(Task.project_id == project_id)
+    result = await db.execute(query)
     return result.scalars().all()
 
-@router.put("/{task_id}", response_model=TaskResponse)
-async def update_task(task_id: int, task_update: TaskUpdate, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    result = await db.execute(select(Task).options(selectinload(Task.assignee)).filter(Task.id == task_id, Task.owner_id == current_user["sub"]))
-    task = result.scalars().first()
-    if task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-    
-    update_data = task_update.model_dump(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(task, key, value)
-        
+@router.post("/")
+async def create_task(data: dict, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    # Verify project belongs to organization
+    proj_res = await db.execute(select(Project).where(Project.id == data["project_id"], Project.organization_id == current_user.organization_id))
+    if not proj_res.scalars().first():
+        return {"error": "Project not found"}
+
+    task = Task(
+        title=data["title"],
+        description=data.get("description", ""),
+        status=data.get("status", "Todo"),
+        project_id=data["project_id"],
+        assignee_id=data.get("assignee_id")
+    )
+    db.add(task)
     await db.commit()
     await db.refresh(task)
     return task

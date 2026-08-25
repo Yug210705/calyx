@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../services/supabase';
+import { authService, setAuthToken } from '../services/api';
 import { useAuth } from '../services/AuthContext';
 import { 
   Hexagon, 
@@ -19,7 +19,8 @@ import {
   Layout,
   TrendingUp,
   PieChart,
-  Activity
+  Activity,
+  Building
 } from 'lucide-react';
 import './Auth.css';
 import atlasLogo from '../assets/atlaslogo.png';
@@ -27,12 +28,15 @@ import atlasLogo from '../assets/atlaslogo.png';
 export const AuthPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setDemoMode } = useAuth();
+  const { setDemoMode, loginState } = useAuth();
   
   const [isLogin, setIsLogin] = useState(location.pathname === '/login');
   const [email, setEmail] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpCode, setOtpCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [orgName, setOrgName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -62,21 +66,11 @@ export const AuthPage = () => {
     navigate(login ? '/login' : '/register');
     setError('');
     setMessage('');
-    setOtpSent(false);
     setSuccess(false);
   };
 
   const handleOAuth = async (provider: 'google' | 'azure') => {
-    setLoading(true);
-    setError('');
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: window.location.origin + '/'
-      }
-    });
-    if (error) setError(error.message);
-    setLoading(false);
+    setError('OAuth is disabled in this environment. Please use email/password.');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,40 +79,24 @@ export const AuthPage = () => {
     setError('');
     setMessage('');
 
-    if (!otpSent) {
-      // Step 1: Send OTP code
-      const { error } = await supabase.auth.signInWithOtp({ 
-        email,
-        options: {
-          shouldCreateUser: true // Allows both login and signup
+    try {
+      if (isLogin) {
+        const data = await authService.login({ email, password });
+        if (data.access_token) {
+          setAuthToken(data.access_token);
+          loginState(data.access_token, { id: '1', email });
+          setSuccess(true);
+          setTimeout(() => navigate('/'), 1000);
         }
-      });
-      
-      if (error) {
-        setError(error.message);
       } else {
-        setOtpSent(true);
-        setMessage('A verification code has been sent to your email.');
+        await authService.signup({ email, password, name, org_name: orgName });
+        setMessage('Account created successfully! Please sign in.');
+        setTimeout(() => handleTabSwitch(true), 2000);
       }
+    } catch (err: any) {
+      setError(err.message || 'Authentication failed. Please try again.');
+    } finally {
       setLoading(false);
-    } else {
-      // Step 2: Verify OTP code
-      const { error } = await supabase.auth.verifyOtp({ 
-        email, 
-        token: otpCode, 
-        type: 'email' 
-      });
-      
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-      } else {
-        setSuccess(true);
-        setTimeout(() => {
-          setDemoMode(false);
-          navigate('/');
-        }, 1500); // 1.5s delay for professional effect
-      }
     }
   };
 
@@ -264,6 +242,39 @@ export const AuthPage = () => {
             <div className="auth-divider">OR</div>
 
             <form className="auth-form" onSubmit={handleSubmit}>
+              {!isLogin && (
+                <>
+                  <div className="auth-input-group">
+                    <label>Full Name</label>
+                    <div className="auth-input-wrapper">
+                      <Users className="auth-input-icon" size={18} />
+                      <input 
+                        type="text" 
+                        className="auth-input" 
+                        placeholder="e.g. Sarah Jenkins"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="auth-input-group">
+                    <label>Workspace / Organization Name</label>
+                    <div className="auth-input-wrapper">
+                      <Building className="auth-input-icon" size={18} />
+                      <input 
+                        type="text" 
+                        className="auth-input" 
+                        placeholder="e.g. Acme Corp"
+                        value={orgName}
+                        onChange={(e) => setOrgName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="auth-input-group">
                 <label>Email address</label>
                 <div className="auth-input-wrapper">
@@ -275,27 +286,27 @@ export const AuthPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    disabled={otpSent}
                   />
                 </div>
               </div>
 
-              {otpSent && (
-                <div className="auth-input-group">
-                  <label>Verification Code</label>
-                  <div className="auth-input-wrapper">
-                    <Lock className="auth-input-icon" size={18} />
-                    <input 
-                      type="text"
-                      className="auth-input" 
-                      placeholder="Enter verification code"
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
-                      required
-                    />
-                  </div>
+              <div className="auth-input-group">
+                <label>Password</label>
+                <div className="auth-input-wrapper">
+                  <Lock className="auth-input-icon" size={18} />
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    className="auth-input" 
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button type="button" className="auth-pwd-toggle" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
-              )}
+              </div>
 
               <button 
                 type="submit" 
@@ -306,10 +317,10 @@ export const AuthPage = () => {
                 {loading ? 'Please wait...' : 
                   success ? (
                     <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
-                      <CheckCircle2 size={18} /> Authenticated!
+                      <CheckCircle2 size={18} /> {isLogin ? 'Authenticated!' : 'Account Created!'}
                     </span>
                   ) : (
-                    otpSent ? 'Verify Code' : 'Send Code'
+                    isLogin ? 'Sign In' : 'Create Account'
                   )}
               </button>
               

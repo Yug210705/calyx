@@ -1,14 +1,20 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from './supabase';
+import { getAuthToken, removeAuthToken } from './api';
+
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
 
 interface AuthContextType {
-  session: Session | null;
+  session: { access_token: string } | null;
   user: User | null;
   isDemoMode: boolean;
   setDemoMode: (isDemo: boolean) => void;
   signOut: () => Promise<void>;
   isLoading: boolean;
+  loginState: (token: string, user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -18,10 +24,11 @@ const AuthContext = createContext<AuthContextType>({
   setDemoMode: () => {},
   signOut: async () => {},
   isLoading: true,
+  loginState: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<{ access_token: string } | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => {
     return localStorage.getItem('demo_mode') === 'true';
@@ -29,21 +36,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Get active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    const token = getAuthToken();
+    if (token) {
+      // Decode JWT roughly to get user data if needed, or rely on a /me endpoint
+      // For now, if we have a token, we set a basic session.
+      setSession({ access_token: token });
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUser({ id: payload.sub, email: payload.email || 'user@example.com' });
+      } catch (e) {
+        // invalid token
+        removeAuthToken();
+      }
+    }
+    setIsLoading(false);
   }, []);
 
   const setDemoMode = (isDemo: boolean) => {
@@ -51,13 +57,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('demo_mode', String(isDemo));
   };
 
+  const loginState = (token: string, userData: User) => {
+    setSession({ access_token: token });
+    setUser(userData);
+  };
+
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setDemoMode(false); // clear demo mode on explicit sign out
+    removeAuthToken();
+    setSession(null);
+    setUser(null);
+    setDemoMode(false);
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, isDemoMode, setDemoMode, signOut, isLoading }}>
+    <AuthContext.Provider value={{ session, user, isDemoMode, setDemoMode, signOut, isLoading, loginState }}>
       {children}
     </AuthContext.Provider>
   );

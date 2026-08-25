@@ -1,49 +1,26 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
-from typing import List
-
 from app.db.session import get_db
-from app.modules.projects.models import Project
-from app.modules.projects.schemas import ProjectCreate, ProjectUpdate, ProjectResponse
-from app.core.security import get_current_user
+from app.db.base_models import Project, User
+from app.core.deps import get_current_user
 
-router = APIRouter(prefix="/projects", tags=["Projects"])
+router = APIRouter(prefix="/projects", tags=["projects"])
 
-@router.post("/", response_model=ProjectResponse)
-async def create_project(project: ProjectCreate, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    db_project = Project(**project.model_dump(), owner_id=current_user["sub"])
-    db.add(db_project)
-    await db.commit()
-    await db.refresh(db_project)
-    return db_project
+@router.get("/")
+async def get_projects(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    result = await db.execute(select(Project).where(Project.organization_id == current_user.organization_id))
+    return result.scalars().all()
 
-@router.get("/", response_model=List[ProjectResponse])
-async def read_projects(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    result = await db.execute(select(Project).options(selectinload(Project.team)).filter(Project.owner_id == current_user["sub"]).offset(skip).limit(limit))
-    projects = result.scalars().all()
-    return projects
-
-@router.get("/{project_id}", response_model=ProjectResponse)
-async def read_project(project_id: int, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    result = await db.execute(select(Project).options(selectinload(Project.team)).filter(Project.id == project_id, Project.owner_id == current_user["sub"]))
-    project = result.scalars().first()
-    if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
-    return project
-
-@router.put("/{project_id}", response_model=ProjectResponse)
-async def update_project(project_id: int, project_update: ProjectUpdate, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    result = await db.execute(select(Project).options(selectinload(Project.team)).filter(Project.id == project_id, Project.owner_id == current_user["sub"]))
-    project = result.scalars().first()
-    if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
-    
-    update_data = project_update.model_dump(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(project, key, value)
-        
+@router.post("/")
+async def create_project(data: dict, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    project = Project(
+        title=data.get("title", "Untitled Project"),
+        description=data.get("description", ""),
+        status=data.get("status", "Planning"),
+        organization_id=current_user.organization_id
+    )
+    db.add(project)
     await db.commit()
     await db.refresh(project)
     return project

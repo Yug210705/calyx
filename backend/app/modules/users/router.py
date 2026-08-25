@@ -1,24 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from typing import List
-
 from app.db.session import get_db
-from app.modules.users.models import User
-from app.modules.users.schemas import UserCreate, UserResponse
+from app.db.base_models import User
+from app.core.deps import get_current_user
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(prefix="/users", tags=["users"])
 
-@router.post("/", response_model=UserResponse)
-async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    db_user = User(**user.model_dump())
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
+@router.get("/")
+async def get_users(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    result = await db.execute(select(User).where(User.organization_id == current_user.organization_id))
+    return result.scalars().all()
 
-@router.get("/", response_model=List[UserResponse])
-async def read_users(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).offset(skip).limit(limit))
-    users = result.scalars().all()
-    return users
+@router.get("/me")
+async def get_me(current_user: User = Depends(get_current_user)):
+    return {"id": current_user.id, "email": current_user.email, "name": current_user.name, "avatar": current_user.avatar}
