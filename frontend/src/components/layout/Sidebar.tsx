@@ -120,7 +120,6 @@ export const Sidebar = () => {
       <div className="sidebar-header">
         <Link to="/" className="sidebar-logo">
           <img src={atlasLogo} alt="Atlas Logo" className="logo-img" />
-          {!collapsed && <span className="logo-text">atlas</span>}
         </Link>
       </div>
 

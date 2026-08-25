@@ -35,16 +35,10 @@
 }
 
 .logo-img {
-  width: 26px;
-  height: 26px;
+  height: 24px;
+  width: auto;
+  max-width: 140px;
   object-fit: contain;
-}
-
-.logo-text {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
 }
 
 /* ── Scrollable Nav ── */
